@@ -2,8 +2,11 @@ package cz.vse.java.utils.userTaskAssignment;
 
 
 import cz.vse.java.connections.utils.IConnection;
+import cz.vse.java.utils.persistance.entities.tasks.ETaskState;
 import cz.vse.java.utils.persistance.entities.tasks.Task;
+import cz.vse.java.utils.persistance.service.TaskService;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -55,7 +58,7 @@ public class TaskSolverContainer {
 
     public void add(IConnection connection, String userName) {
 
-        this.container.add(new TaskSolver(userName, connection));
+        this.container.add(new TaskSolver(userName, connection, this));
     }
 
 
@@ -64,6 +67,28 @@ public class TaskSolverContainer {
         this.assigner.assign(this, task);
     }
 
+
+    public void resetTasks(TaskSolver ts) {
+
+        List<Task> tasks = ts.getTasks(ts.getUserName());
+
+        TaskService taskService = new TaskService();
+
+        for (Task t : tasks) {
+
+            t.setState(ETaskState.NOT_ASSIGNED);
+            try {
+
+                taskService.update(t);
+
+            } catch (SQLException e) {
+
+                e.printStackTrace();
+            }
+        }
+
+        ts.clearTasks();
+    }
 
     /* *****************************************************************/
     /* Static methods **************************************************/

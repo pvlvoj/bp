@@ -23,11 +23,14 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.utils.ConnectionAutoCloser;
 import cz.vse.java.utils.Token;
+import cz.vse.java.utils.observerDP.IObserver;
+import cz.vse.java.utils.observerDP.ISubject;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,7 +47,7 @@ import java.util.logging.Logger;
  *
  * @see cz.vse.java.connections
  */
-public class S2CConnection implements ISSConnection, IProblemSolver {
+public class S2CConnection implements ISSConnection, IProblemSolver, ISubject {
 
 
     /* *****************************************************************/
@@ -72,6 +75,9 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
     private boolean autoClose;
 
     private ProblemSolverContainer problemSolvers;
+
+    private boolean running = false;
+    private final CopyOnWriteArrayList<IObserver> observers;
 
     /* *****************************************************************/
     /* Static variables ************************************************/
@@ -102,6 +108,7 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
         this.authenticationState = new HashMap<>();
 
         init();
+        this.observers = new CopyOnWriteArrayList<>();
     }
 
     /* *****************************************************************/
@@ -164,6 +171,50 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
 
 
     /**
+     * <p>Adds the {@link IObserver} to the field.</p>
+     *
+     * @param observer the listener to any change.
+     */
+    @Override
+    public void addObserver(IObserver observer) {
+
+        synchronized (this.observers) {
+
+            this.observers.addIfAbsent(observer);
+        }
+    }
+
+    /**
+     * <p>Removes the {@link IObserver} from the field.</p>
+     *
+     * @param observer the listener to any change.
+     */
+    @Override
+    public void removeObserver(IObserver observer) {
+
+        synchronized (this.observers) {
+
+            this.observers.remove(observer);
+        }
+    }
+
+    /**
+     * <p>Notifies all the {@link IObserver}s about
+     * the change of state</p>
+     */
+    @Override
+    public void notifyObservers() {
+
+        synchronized (this.observers) {
+
+            for (IObserver o : this.observers) {
+
+                o.update();
+            }
+        }
+    }
+
+    /**
      * <p>Closes the connection channel.</p>
      */
     @Override
@@ -185,6 +236,8 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
             LOG.log(Level.SEVERE, "Cannot close the connection! " + e.getMessage());
         }
         LOG.log(Level.INFO, "Connection closed.");
+        this.running = false;
+        notifyObservers();
     }
 
     /**
@@ -193,7 +246,10 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
     @Override
     public void listen() {
 
-        listening = true;
+        this.listening = true;
+        this.running = true;
+
+        notifyObservers();
 
         while (listening) {
 
@@ -331,6 +387,7 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
                 this.setAuthenticated(true);
                 this.send(new AuthenticationResultContainer(true));
                 this.autoCloser.stop();
+                notifyObservers();
             }
         }
     }
@@ -356,6 +413,18 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
         return this.amIAuthenticated;
     }
 
+    /**
+     * Getter for {@link boolean} formed {@code running}
+     * of the instance of {@link S2CConnection}
+     *
+     * @return the value of {@code running}
+     * @see boolean
+     * @see S2CConnection
+     */
+    public boolean isRunning() {
+
+        return running;
+    }
 
     /**
      * <p>Gets reference to the message handler container.</p>
@@ -391,6 +460,21 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
     public EServiceType getServiceType() {
 
         return this.getConnectionManager().getService().getServiceType();
+    }
+
+
+
+    /**
+     * Getter for {@link boolean} formed {@code authenticated}
+     * of the instance of {@link S2CConnection}
+     *
+     * @return the value of {@code authenticated}
+     * @see boolean
+     * @see S2CConnection
+     */
+    public boolean isAuthenticated() {
+
+        return authenticated;
     }
 
 
@@ -442,6 +526,4 @@ public class S2CConnection implements ISSConnection, IProblemSolver {
 
         this.token = token;
     }
-
-
 }

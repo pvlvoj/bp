@@ -1,13 +1,17 @@
 package cz.vse.java.utils.userTaskAssignment;
 
 
+import cz.vse.java.connections.serviceSide.S2CConnection;
 import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.messages.AddTaskMessage;
+import cz.vse.java.utils.observerDP.IObserver;
+import cz.vse.java.utils.observerDP.ISubject;
 import cz.vse.java.utils.persistance.entities.tasks.ETaskState;
 import cz.vse.java.utils.persistance.entities.tasks.Task;
 import cz.vse.java.utils.persistance.entities.tasks.TaskContainer;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -23,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @see cz.vse.java.utils.userTaskAssignment
  */
-public class TaskSolver {
+public class TaskSolver implements IObserver {
 
 
     /* *****************************************************************/
@@ -35,6 +39,8 @@ public class TaskSolver {
     private IConnection connection;
 
     private boolean listening = false;
+
+    private TaskSolverContainer tsc;
 
 
     /* *****************************************************************/
@@ -50,11 +56,13 @@ public class TaskSolver {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
-    public TaskSolver(String userName, IConnection connection) {
+    public TaskSolver(String userName, IConnection connection, TaskSolverContainer tsc) {
 
         this.userName = userName;
         this.connection = connection;
         this.container = new TaskContainer();
+
+        this.tsc = tsc;
     }
 
     /* *****************************************************************/
@@ -92,6 +100,31 @@ public class TaskSolver {
 
         this.container.clear();
     }
+
+    /**
+     * <p>Gets updated by notification of the {@link ISubject}
+     * implementing instance.</p>
+     */
+    @Override
+    public void update() {
+
+        if(connection instanceof S2CConnection) {
+
+            S2CConnection conn = (S2CConnection) connection;
+
+            if(!conn.isRunning() && conn.isAuthenticated()) {
+
+                this.tsc.resetTasks(this);
+            }
+
+        } else {
+
+            LOG.log(Level.SEVERE, "UNSUPPORTED CONNECTION TYPE!");
+        }
+
+    }
+
+
 
     /* *****************************************************************/
     /* Static methods **************************************************/
