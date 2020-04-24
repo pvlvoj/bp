@@ -1,0 +1,303 @@
+package cz.vse.java.services.serverSide;
+
+
+import cz.vse.java.handlers.ListeningForTasksContainerHandler;
+import cz.vse.java.utils.database.DBConnection;
+import cz.vse.java.utils.database.DatabaseConnectionContainer;
+import cz.vse.java.utils.database.EDBUse;
+import cz.vse.java.utils.observerDP.IObserver;
+import cz.vse.java.utils.persistance.entities.IEntity;
+import cz.vse.java.utils.persistance.entities.tasks.Task;
+import cz.vse.java.utils.persistance.service.TaskService;
+import cz.vse.java.utils.userTaskAssignment.IAssignScenario;
+import cz.vse.java.utils.userTaskAssignment.TaskSolverContainer;
+
+import java.io.File;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
+
+
+/*********************************************************************
+ * <p>The class of {@code TaskManagement} is used to abstractly define
+ * the type of the instances.</p>
+ *
+ *
+ * <i>Written for project "Connections2".</i>
+ * @author Vojtěch Pavlů
+ * @version 10. 04. 2020
+ *
+ *
+ * @see cz.vse.java.services
+ */
+public class TaskManagement extends AGeneralService implements IService, IObserver {
+
+
+    /* *****************************************************************/
+    /* Instance variables **********************************************/
+
+
+    private final CopyOnWriteArrayList<IObserver> observers;
+
+    private IAssignScenario assignScenario;
+    private TaskSolverContainer taskSolverContainer;
+
+    private Runnable autoUpdate;
+    private boolean update;
+
+    /* *****************************************************************/
+    /* Static variables ************************************************/
+
+    /**
+     * <p>Private static instance of the {@link Logger}
+     * - the logger of the {@link TaskManagement class</p>
+     */
+    private static final Logger LOG =
+            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+    /* *****************************************************************/
+    /* Constructors ****************************************************/
+
+    public TaskManagement(String routerIP,
+                          int routerPort,
+                          int clientsPort,
+                          int maxClients,
+                          String pathToTrustStore,
+                          String passwordToTrustStore,
+                          String pathToKeyStore,
+                          String passwordToKeyStore) {
+
+        super(
+                EServiceType.TASK_SERVICE,
+                routerIP,
+                routerPort,
+                clientsPort,
+                maxClients,
+                false,
+                pathToTrustStore,
+                passwordToTrustStore,
+                pathToKeyStore,
+                passwordToKeyStore
+        );
+
+        this.observers = new CopyOnWriteArrayList<>();
+
+        super.clients.addMessageHandler(new ListeningForTasksContainerHandler(null));
+
+
+    }
+
+    /* *****************************************************************/
+    /* Instance methods ************************************************/
+
+    /**
+     * When an object implementing interface <code>Runnable</code> is used
+     * to create a thread, starting the thread causes the object's
+     * <code>run</code> method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method <code>run</code> is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
+    @Override
+    public void run() {
+
+        new Thread(super.router).start();
+        new Thread(super.clients).start();
+    }
+
+
+    /**
+     * <p>Adds the {@link IObserver} to the field.</p>
+     *
+     * @param observer the listener to any change.
+     */
+    @Override
+    public void addObserver(IObserver observer) {
+
+        synchronized (this.observers) {
+
+            this.observers.addIfAbsent(observer);
+        }
+    }
+
+    /**
+     * <p>Removes the {@link IObserver} from the field.</p>
+     *
+     * @param observer the listener to any change.
+     */
+    @Override
+    public void removeObserver(IObserver observer) {
+
+        synchronized (this.observers) {
+
+            this.observers.remove(observer);
+        }
+    }
+
+    /**
+     * <p>Notifies all the {@link IObserver}s about
+     * the change of state</p>
+     */
+    @Override
+    public void notifyObservers() {
+
+        synchronized (this.observers) {
+
+            for (IObserver observer : observers) {
+
+                observer.update();
+            }
+        }
+    }
+
+
+    public void prepareThread() {
+
+        this.autoUpdate = new Runnable(){
+
+            @Override
+            public void run() {
+
+                while (update) {
+
+                    try {
+
+                        updateTasks();
+                        Thread.sleep(500);
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+    }
+
+
+
+
+    public void updateTasks() throws SQLException {
+
+        TaskService ts = new TaskService();
+        List<IEntity> tasks = ts.getAll();
+
+        for (IEntity e : tasks) {
+
+
+
+        }
+
+    }
+
+
+    public List<Task> getTasks(String userName) {
+
+        return this.taskSolverContainer.getByName(userName);
+    }
+
+
+
+
+
+    /* *****************************************************************/
+    /* Static methods **************************************************/
+
+
+
+    /* *****************************************************************/
+    /* Getters *********************************************************/
+
+
+
+    /* *****************************************************************/
+    /* Setters *********************************************************/
+
+
+
+    /* *****************************************************************/
+    /* Main method *****************************************************/
+
+
+    /**
+     * The main method of the class of TaskManagement.
+     *
+     */
+    public static void main(String[] args) {
+        
+        System.err.println(">>> QuickTest: TaskManagement class");
+        System.err.println(">>> Creating TaskManagement instance...");
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.USER_AUTHENTICATION,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.FINGERPRINT_AUTHENTICATION,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.EMPLOYEE_MANAGEMENT,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.STORAGE_MANAGEMENT,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.TASK_MANAGEMENT,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.ORDERS_MANAGEMENT,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+
+        ClassLoader classLoader = TaskManagement.class.getClassLoader();
+        File file = new File(classLoader.getResource("stores/keyStore.jks").getFile());
+
+        ClassLoader classLoader2 = TaskManagement.class.getClassLoader();
+        File file2 = new File(classLoader2.getResource("stores/trustStore.jts").getFile());
+
+        TaskManagement instance = new TaskManagement(
+                "localhost",
+                888,
+                555,
+                50,
+                file2.getAbsolutePath(), "changeit",
+                file.getAbsolutePath(), "changeit"
+        );
+
+        new Thread(instance).start();
+
+        while (true) {
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            try {
+
+                instance.updateTasks();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //System.err.println(">>> Creation successfull...");
+    }
+}
