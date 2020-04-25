@@ -664,7 +664,7 @@ public class Client extends AService implements Runnable, IObserver {
 
         Client.setTrustStore(file.getAbsolutePath(), "changeit");
 
-        UserProperties.getInstance().setUserName("jira00");
+        UserProperties.getInstance().setUserName("cimj00");
         UserProperties.getInstance().setPassword("password");
 
         Client instance = Client.getInstance();
