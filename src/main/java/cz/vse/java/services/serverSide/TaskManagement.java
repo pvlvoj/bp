@@ -7,9 +7,11 @@ import cz.vse.java.utils.database.DatabaseConnectionContainer;
 import cz.vse.java.utils.database.EDBUse;
 import cz.vse.java.utils.observerDP.IObserver;
 import cz.vse.java.utils.persistance.entities.IEntity;
+import cz.vse.java.utils.persistance.entities.tasks.ETaskState;
 import cz.vse.java.utils.persistance.entities.tasks.Task;
 import cz.vse.java.utils.persistance.service.TaskService;
 import cz.vse.java.utils.userTaskAssignment.IAssignScenario;
+import cz.vse.java.utils.userTaskAssignment.RandomAssign;
 import cz.vse.java.utils.userTaskAssignment.TaskSolverContainer;
 
 import java.io.File;
@@ -82,6 +84,7 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
         );
 
         this.observers = new CopyOnWriteArrayList<>();
+        this.taskSolverContainer = new TaskSolverContainer(new RandomAssign());
 
         super.clients.addMessageHandler(new ListeningForTasksContainerHandler(null));
 
@@ -185,14 +188,12 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
     public void updateTasks() throws SQLException {
 
         TaskService ts = new TaskService();
-        List<IEntity> tasks = ts.getAll();
+        List<Task> tasks = ts.getNullUser(ETaskState.NOT_ASSIGNED);
 
-        for (IEntity e : tasks) {
+        for (Task e : tasks) {
 
-
-
+            this.taskSolverContainer.assign(e);
         }
-
     }
 
 
@@ -213,7 +214,18 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
     /* *****************************************************************/
     /* Getters *********************************************************/
 
+    /**
+     * Getter for {@link TaskSolverContainer} formed {@code taskSolverContainer}
+     * of the instance of {@link TaskManagement}
+     *
+     * @return the value of {@code taskSolverContainer}
+     * @see TaskSolverContainer
+     * @see TaskManagement
+     */
+    public TaskSolverContainer getTaskSolverContainer() {
 
+        return taskSolverContainer;
+    }
 
     /* *****************************************************************/
     /* Setters *********************************************************/

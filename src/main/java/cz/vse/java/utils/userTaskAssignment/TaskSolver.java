@@ -9,7 +9,9 @@ import cz.vse.java.utils.observerDP.ISubject;
 import cz.vse.java.utils.persistance.entities.tasks.ETaskState;
 import cz.vse.java.utils.persistance.entities.tasks.Task;
 import cz.vse.java.utils.persistance.entities.tasks.TaskContainer;
+import cz.vse.java.utils.persistance.service.TaskService;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -87,8 +89,7 @@ public class TaskSolver implements IObserver {
 
     public void add(Task task) {
 
-        if(task.getState().equals(ETaskState.ASSIGNED) ||
-                task.getState().equals(ETaskState.CONFIRMED)) {
+        if(listening) {
 
             this.container.add(task);
             this.connection.send(new AddTaskMessage(task));
@@ -114,6 +115,7 @@ public class TaskSolver implements IObserver {
 
             if(!conn.isRunning() && conn.isAuthenticated()) {
 
+                listening = false;
                 this.tsc.resetTasks(this);
             }
 
@@ -121,9 +123,29 @@ public class TaskSolver implements IObserver {
 
             LOG.log(Level.SEVERE, "UNSUPPORTED CONNECTION TYPE!");
         }
-
     }
 
+
+    public void updateTaskState(ETaskState state, Long taskID) {
+
+        for (Task t : this.getTasks(this.getUserName())) {
+
+            if(t.getId().equals(taskID)) {
+
+                t.setState(state);
+                TaskService ts = new TaskService();
+                try {
+
+                    ts.update(t);
+
+                } catch (SQLException e) {
+
+                    LOG.log(Level.SEVERE, "Cannot update the task! " + e.getMessage());
+                }
+                break;
+            }
+        }
+    }
 
 
     /* *****************************************************************/

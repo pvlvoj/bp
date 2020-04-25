@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -48,9 +49,10 @@ public class TaskSolverContainer {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
-    public TaskSolverContainer() {
+    public TaskSolverContainer(IAssignScenario assigner) {
 
         this.container = new CopyOnWriteArrayList<>();
+        this.assigner = assigner;
     }
 
     /* *****************************************************************/
@@ -74,9 +76,13 @@ public class TaskSolverContainer {
 
         TaskService taskService = new TaskService();
 
+        LOG.log(Level.SEVERE, "Reseting tasks of " + ts.getUserName());
+
         for (Task t : tasks) {
 
             t.setState(ETaskState.NOT_ASSIGNED);
+            t.setUser(null);
+
             try {
 
                 taskService.update(t);
@@ -87,7 +93,10 @@ public class TaskSolverContainer {
             }
         }
 
+        LOG.log(Level.SEVERE, tasks.size() + " tasks reseted.");
+
         ts.clearTasks();
+        this.getContainer().remove(ts);
     }
 
     /* *****************************************************************/
@@ -113,16 +122,29 @@ public class TaskSolverContainer {
 
     public List<Task> getByName(String userName) {
 
-        for (TaskSolver ts : container) {
+        TaskSolver ts = this.getTaskSolver(userName);
+
+        if(ts != null) {
+
+            return ts.getTasks(userName);
+        }
+
+        return null;
+    }
+
+    public TaskSolver getTaskSolver(String userName) {
+
+        for(TaskSolver ts : this.getContainer()) {
 
             if(ts.getUserName().equals(userName)) {
 
-                return ts.getTasks(userName);
+                return ts;
             }
         }
 
         return null;
     }
+
 
     /**
      * Getter for {@link CopyOnWriteArrayList<>} formed {@code container}
@@ -141,29 +163,4 @@ public class TaskSolverContainer {
     /* Setters *********************************************************/
 
 
-
-    /* *****************************************************************/
-    /* Main method *****************************************************/
-
-
-    /**
-     * The main method of the class of TaskSolverContainer.
-     *
-     */
-  /*  public static void main(String[] args){
-        
-        System.err.println(">>> QuickTest: TaskSolverContainer class");
-        System.err.println(">>> Creating TaskSolverContainer instance...");
-        TaskSolverContainer instance = new TaskSolverContainer();
-        
-        System.out.println(instance.toString());
-        
-        
-        //code
-        
-        
-        System.err.println(">>> Creation successfull...");
-    }
-    
-    */
 }

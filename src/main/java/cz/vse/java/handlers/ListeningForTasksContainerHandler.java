@@ -73,12 +73,12 @@ public class ListeningForTasksContainerHandler extends AHandler {
 
                 if(service instanceof TaskManagement) {
 
-                    String userName = (String)((ListeningForTasksContainer) message).getContent()[0];
-                    boolean listening = (Boolean) ((ListeningForTasksContainer) message).getContent()[1];
-                    TaskManagement tm = (TaskManagement) service;
-                    //tm.getUserTaskAssignment().setUserTaskListening(userName, listening, connection);
+                    String userName = (String) ((ListeningForTasksContainer) message).getContent()[0];
+                    boolean listening = (boolean) ((ListeningForTasksContainer) message).getContent()[1];
 
-                    //TODO
+                    TaskManagement tm = (TaskManagement) service;
+
+                    tm.getTaskSolverContainer().getTaskSolver(userName).setListening(listening);
 
                     return true;
                 }
