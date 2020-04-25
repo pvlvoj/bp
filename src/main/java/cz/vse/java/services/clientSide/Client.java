@@ -671,7 +671,7 @@ public class Client extends AService implements Runnable, IObserver {
 
 
         instance.prepareConnections(
-                "10.0.0.3",
+                "192.168.1.105",
                 9889
         );
 
@@ -696,17 +696,17 @@ public class Client extends AService implements Runnable, IObserver {
 
         t.start();
 
-        instance.addMessageTask(new MessageTask(new ServiceReferenceRequest(EServiceType.TEXT_PRINTER), EServiceType.ROUTER));
-        instance.addMessageTask(new MessageTask(new ServiceReferenceRequest(EServiceType.STORAGE_MANAGEMENT), EServiceType.ROUTER));
-        instance.addMessageTask(new MessageTask(new ProductByIDRequest(4L), EServiceType.STORAGE_MANAGEMENT, 30));
-        instance.addMessageTask(new MessageTask(new ProductAllRequest(), EServiceType.STORAGE_MANAGEMENT, 25));
+        //instance.addMessageTask(new MessageTask(new ServiceReferenceRequest(EServiceType.TEXT_PRINTER), EServiceType.ROUTER));
+        //instance.addMessageTask(new MessageTask(new ServiceReferenceRequest(EServiceType.STORAGE_MANAGEMENT), EServiceType.ROUTER));
+        //instance.addMessageTask(new MessageTask(new ProductByIDRequest(4L), EServiceType.STORAGE_MANAGEMENT, 30));
+        //instance.addMessageTask(new MessageTask(new ProductAllRequest(), EServiceType.STORAGE_MANAGEMENT, 25));
         //instance.addMessageTask(new MessageTask(new ChangeProductQuantity(0, 4L), EServiceType.STORAGE_MANAGEMENT));
         instance.addMessageTask(new MessageTask(new ServiceReferenceRequest(EServiceType.TASK_SERVICE), EServiceType.ROUTER));
-        instance.addMessageTask(new MessageTask(new ListeningForTasksContainer(UserProperties.getInstance().getUserName(), true), EServiceType.TASK_SERVICE));
-        instance.addMessageTask(new MessageTask(new ServiceReferenceRequest(EServiceType.ORDER_MANAGEMENT), EServiceType.ROUTER));
+        //instance.addMessageTask(new MessageTask(new ListeningForTasksContainer(UserProperties.getInstance().getUserName(), true), EServiceType.TASK_SERVICE));
+        //instance.addMessageTask(new MessageTask(new ServiceReferenceRequest(EServiceType.ORDER_MANAGEMENT), EServiceType.ROUTER));
 
-        instance.addMessageTask(new MessageTask(new UniqueOrderIdentRequest(), EServiceType.ORDER_MANAGEMENT, 120L));
-        instance.addMessageTask(new MessageTask(new GiveMeRoles("jira00"), EServiceType.ROUTER));
+        //instance.addMessageTask(new MessageTask(new UniqueOrderIdentRequest(), EServiceType.ORDER_MANAGEMENT, 120L));
+        //instance.addMessageTask(new MessageTask(new GiveMeRoles("jira00"), EServiceType.ROUTER));
 
 
         try {
@@ -715,23 +715,21 @@ public class Client extends AService implements Runnable, IObserver {
             e.printStackTrace();
         }
 
-        String ident = instance.getPreOrder().getIdentificator();
-
-        Product product = instance.getProducts().findProducts("Míša").get(0);
-
-        instance.addMessageTask(new MessageTask(new AddPreOrderItem(product, 1, instance.getPreOrder().getIdentificator()), EServiceType.ORDER_MANAGEMENT));
-        instance.addMessageTask(new MessageTask(new AddPreOrderItem(product, 3, instance.getPreOrder().getIdentificator()), EServiceType.ORDER_MANAGEMENT));
+        //String ident = instance.getPreOrder().getIdentificator();
 
         Thread.sleep(2000);
-
+/*
         instance.addMessageTask(new MessageTask(new GiveMeMyOrder(ident), EServiceType.ORDER_MANAGEMENT));
 
         instance.addMessageTask(new MessageTask(new SetContactToOrderMessage("yourmama@email.com", ident), EServiceType.ORDER_MANAGEMENT));
         instance.addMessageTask(new MessageTask(new SetNoteToOrderMessage("Note kemo", ident), EServiceType.ORDER_MANAGEMENT));
+*/
+
+        instance.addMessageTask(new MessageTask(new ListeningForTasksContainer(UserProperties.getInstance().getUserName(), true), EServiceType.TASK_SERVICE));
 
         Thread.sleep(6000);
 
-        instance.addMessageTask(new MessageTask(new TryToGenerateOrder(ident), EServiceType.ORDER_MANAGEMENT));
+        //instance.addMessageTask(new MessageTask(new TryToGenerateOrder(ident), EServiceType.ORDER_MANAGEMENT));
 
     }
 }

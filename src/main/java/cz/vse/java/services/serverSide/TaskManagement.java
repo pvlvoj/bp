@@ -18,6 +18,7 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -46,7 +47,7 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
     private TaskSolverContainer taskSolverContainer;
 
     private Runnable autoUpdate;
-    private boolean update;
+    private boolean update = false;
 
     /* *****************************************************************/
     /* Static variables ************************************************/
@@ -85,6 +86,9 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
 
         this.observers = new CopyOnWriteArrayList<>();
         this.taskSolverContainer = new TaskSolverContainer(new RandomAssign());
+
+        this.update = true;
+
 
         super.clients.addMessageHandler(new ListeningForTasksContainerHandler(null));
 
@@ -170,7 +174,7 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
                     try {
 
                         updateTasks();
-                        Thread.sleep(500);
+                        Thread.sleep(5000);
 
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -180,15 +184,17 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
                 }
             }
         };
+
+        new Thread(autoUpdate).start();
     }
-
-
 
 
     public void updateTasks() throws SQLException {
 
         TaskService ts = new TaskService();
         List<Task> tasks = ts.getNullUser(ETaskState.NOT_ASSIGNED);
+
+        LOG.log(Level.INFO, "Gonna reassign not assigned tasks. There are " + tasks.size() + " of them.");
 
         for (Task e : tasks) {
 
@@ -241,9 +247,6 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
      *
      */
     public static void main(String[] args) {
-        
-        System.err.println(">>> QuickTest: TaskManagement class");
-        System.err.println(">>> Creating TaskManagement instance...");
 
         DatabaseConnectionContainer.getInstance().add(
                 EDBUse.USER_AUTHENTICATION,
@@ -277,39 +280,22 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
 
 
         ClassLoader classLoader = TaskManagement.class.getClassLoader();
-        File file = new File(classLoader.getResource("stores/keyStore.jks").getFile());
+        File keystore = new File(classLoader.getResource("stores/keyStore.jks").getFile());
 
         ClassLoader classLoader2 = TaskManagement.class.getClassLoader();
-        File file2 = new File(classLoader2.getResource("stores/trustStore.jts").getFile());
+        File truststore = new File(classLoader2.getResource("stores/trustStore.jts").getFile());
 
         TaskManagement instance = new TaskManagement(
                 "localhost",
                 888,
                 555,
                 50,
-                file2.getAbsolutePath(), "changeit",
-                file.getAbsolutePath(), "changeit"
+                keystore.getAbsolutePath(), "changeit",
+                truststore.getAbsolutePath(), "changeit"
         );
 
         new Thread(instance).start();
 
-        while (true) {
-
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            try {
-
-                instance.updateTasks();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        //System.err.println(">>> Creation successfull...");
+        instance.prepareThread();
     }
 }

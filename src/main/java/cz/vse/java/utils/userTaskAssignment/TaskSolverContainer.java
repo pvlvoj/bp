@@ -76,6 +76,16 @@ public class TaskSolverContainer {
 
         TaskService taskService = new TaskService();
 
+        try {
+
+            tasks.addAll(taskService.getByUserNameAndState(ts.getUserName(), ETaskState.ASSIGNED));
+            tasks.addAll(taskService.getByUserNameAndState(ts.getUserName(), ETaskState.CONFIRMED));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         LOG.log(Level.SEVERE, "Reseting tasks of " + ts.getUserName());
 
         for (Task t : tasks) {

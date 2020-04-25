@@ -63,11 +63,14 @@ public class RandomAssign implements IAssignScenario {
     public void assign(TaskSolverContainer tsc, Task task) {
 
         int size = tsc.getContainer().size();
-        TaskSolver ts = tsc.getContainer().get(
-                RandomNumberGenerator
-                        .getRandomNumberInRange(0, size-1));
 
-        ts.add(task);
+        if(size > 0) {
+            TaskSolver ts = tsc.getContainer().get(
+                    RandomNumberGenerator
+                            .getRandomNumberInRange(0, size - 1));
+
+            ts.add(task);
+        }
     }
 
     /* *****************************************************************/

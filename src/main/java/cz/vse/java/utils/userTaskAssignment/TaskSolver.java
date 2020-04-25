@@ -6,10 +6,12 @@ import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.messages.AddTaskMessage;
 import cz.vse.java.utils.observerDP.IObserver;
 import cz.vse.java.utils.observerDP.ISubject;
+import cz.vse.java.utils.persistance.entities.User;
 import cz.vse.java.utils.persistance.entities.tasks.ETaskState;
 import cz.vse.java.utils.persistance.entities.tasks.Task;
 import cz.vse.java.utils.persistance.entities.tasks.TaskContainer;
 import cz.vse.java.utils.persistance.service.TaskService;
+import cz.vse.java.utils.persistance.service.UserService;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -64,6 +66,20 @@ public class TaskSolver implements IObserver {
         this.connection = connection;
         this.container = new TaskContainer();
 
+
+        ((S2CConnection) connection).addObserver(this);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADDING OBSERVER");
+
+       /*
+        if(connection instanceof S2CConnection) {
+
+
+        } else {
+
+            throw new IllegalArgumentException("Not supported connection type!");
+        }*/
+
         this.tsc = tsc;
     }
 
@@ -92,7 +108,31 @@ public class TaskSolver implements IObserver {
         if(listening) {
 
             this.container.add(task);
-            this.connection.send(new AddTaskMessage(task));
+            User u = null;
+
+            try {
+
+                u = (User) new UserService().findByUserName(this.userName);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            if(u != null) {
+
+                task.setUser(u);
+                task.setState(ETaskState.ASSIGNED);
+
+                try {
+
+                    new TaskService().update(task);
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                this.connection.send(new AddTaskMessage(task));
+            }
         }
     }
 
@@ -109,11 +149,17 @@ public class TaskSolver implements IObserver {
     @Override
     public void update() {
 
+        System.out.println("UPDATE");
+
         if(connection instanceof S2CConnection) {
 
             S2CConnection conn = (S2CConnection) connection;
 
+            LOG.log(Level.SEVERE, "Updating connection");
+
             if(!conn.isRunning() && conn.isAuthenticated()) {
+
+                System.out.println("running: " + conn.isRunning() + " " + conn.isAuthenticated());
 
                 listening = false;
                 this.tsc.resetTasks(this);

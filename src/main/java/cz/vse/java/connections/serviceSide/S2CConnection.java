@@ -181,6 +181,7 @@ public class S2CConnection implements ISSConnection, IProblemSolver, ISubject {
         synchronized (this.observers) {
 
             this.observers.addIfAbsent(observer);
+            System.out.println("added observer " + observer.getClass().getName());
         }
     }
 
@@ -223,6 +224,9 @@ public class S2CConnection implements ISSConnection, IProblemSolver, ISubject {
         LOG.log(Level.INFO, "Closing the connection with client.");
         listening = false;
 
+        this.running = false;
+        notifyObservers();
+
         this.connectionManager.unregister(this);
 
         try {
@@ -234,10 +238,8 @@ public class S2CConnection implements ISSConnection, IProblemSolver, ISubject {
         } catch (IOException e) {
 
             LOG.log(Level.SEVERE, "Cannot close the connection! " + e.getMessage());
+
         }
-        LOG.log(Level.INFO, "Connection closed.");
-        this.running = false;
-        notifyObservers();
     }
 
     /**

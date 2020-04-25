@@ -1,35 +1,35 @@
 package cz.vse.java.handlers;
 
 
-import cz.vse.java.connections.serviceSide.S2CConnection;
+import cz.vse.java.connections.clientSide.C2SConnection;
 import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.handlers.utils.AHandler;
 import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
-import cz.vse.java.messages.ListeningForTasksContainer;
+import cz.vse.java.messages.AddTaskMessage;
 import cz.vse.java.messages.utils.IMessage;
+import cz.vse.java.services.clientSide.Client;
+import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.IService;
-import cz.vse.java.services.serverSide.TaskManagement;
-import cz.vse.java.utils.userTaskAssignment.TaskSolver;
-import cz.vse.java.utils.userTaskAssignment.TaskSolverContainer;
+import cz.vse.java.utils.persistance.entities.tasks.Task;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*********************************************************************
- * <p>The class of {@code ListeningForTasksContainerHandler} is used to abstractly define
+ * <p>The class of {@code AddTaskMessageHandler} is used to abstractly define
  * the type of the instances.</p>
  *
  *
  * <i>Written for project "Connections2".</i>
  * @author Vojtěch Pavlů
- * @version 10. 04. 2020
+ * @version 25. 04. 2020
  *
  *
  * @see cz.vse.java.handlers
  */
-public class ListeningForTasksContainerHandler extends AHandler {
+public class AddTaskMessageHandler extends AHandler {
 
 
     /* *****************************************************************/
@@ -42,7 +42,7 @@ public class ListeningForTasksContainerHandler extends AHandler {
 
     /**
      * <p>Private static instance of the {@link Logger}
-     * - the logger of the {@link ListeningForTasksContainerHandler class</p>
+     * - the logger of the {@link AddTaskMessageHandler class</p>
      */
     private static final Logger LOG =
             Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -50,7 +50,7 @@ public class ListeningForTasksContainerHandler extends AHandler {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
-    public ListeningForTasksContainerHandler(HandlerContainer container) {
+    public AddTaskMessageHandler(HandlerContainer container) {
 
         super(container);
     }
@@ -68,39 +68,23 @@ public class ListeningForTasksContainerHandler extends AHandler {
     @Override
     public boolean handle(IConnection connection, IMessage message) {
 
-        if(message instanceof ListeningForTasksContainer) {
+        if(message instanceof AddTaskMessage) {
 
-            if(connection instanceof S2CConnection) {
+            if(connection instanceof C2SConnection) {
 
-                IService service = connection.getConnectionManager().getService();
+                IService s = connection.getConnectionManager().getService();
 
-                if(service instanceof TaskManagement) {
+                if(s.getServiceType().equals(EServiceType.CLIENT)) {
 
-                    String userName = (String) ((ListeningForTasksContainer) message).getContent()[0];
-                    boolean listening = (boolean) ((ListeningForTasksContainer) message).getContent()[1];
+                    Task t = ((AddTaskMessage) message).getContent();
+                    Client.getInstance().addTask(t);
 
-                    TaskManagement tm = (TaskManagement) service;
-
-                    TaskSolverContainer tsc = tm.getTaskSolverContainer();
-                    TaskSolver ts = tsc.getTaskSolver(userName);
-
-                    if(ts == null) {
-
-                        LOG.log(Level.SEVERE, "Creating new TaskSolver instance");
-
-                        tsc.add(connection, userName);
-                        ts = tsc.getTaskSolver(userName);
-                    }
-
-                    LOG.log(Level.INFO, "Setting listening to new tasks to: " + listening);
-
-                    ts.setListening(listening);
+                    LOG.log(Level.INFO, "Adding task " + t);
 
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -113,7 +97,7 @@ public class ListeningForTasksContainerHandler extends AHandler {
     @Override
     public IHandler copy(HandlerContainer container) {
 
-        return new ListeningForTasksContainerHandler(container);
+        return new AddTaskMessageHandler(container);
     }
 
     /* *****************************************************************/
@@ -130,4 +114,29 @@ public class ListeningForTasksContainerHandler extends AHandler {
     /* Setters *********************************************************/
 
 
+
+    /* *****************************************************************/
+    /* Main method *****************************************************/
+
+
+    /**
+     * The main method of the class of AddTaskMessageHandler.
+     *
+     */
+  /*  public static void main(String[] args){
+        
+        System.err.println(">>> QuickTest: AddTaskMessageHandler class");
+        System.err.println(">>> Creating AddTaskMessageHandler instance...");
+        AddTaskMessageHandler instance = new AddTaskMessageHandler();
+        
+        System.out.println(instance.toString());
+        
+        
+        //code
+        
+        
+        System.err.println(">>> Creation successfull...");
+    }
+    
+    */
 }
