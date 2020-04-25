@@ -357,6 +357,19 @@ public class Client extends AService implements Runnable, IObserver {
         this.tasks.remove(task.getId());
         this.tasks.add(task);
 
+        if(task.getState().equals(ETaskState.ASSIGNED)) {
+
+            LOG.log(Level.INFO, "Task was just 'assigned', the state set to 'confirmed'.");
+
+            task.setState(ETaskState.CONFIRMED);
+
+            this.addMessageTask(new MessageTask(
+                    new TaskStateChange(task.getId(),
+                            ETaskState.CONFIRMED,
+                            UserProperties.getInstance().getUserName()),
+                    EServiceType.TASK_SERVICE
+            ));
+        }
     }
 
 

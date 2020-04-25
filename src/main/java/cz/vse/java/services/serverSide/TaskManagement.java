@@ -2,6 +2,7 @@ package cz.vse.java.services.serverSide;
 
 
 import cz.vse.java.handlers.ListeningForTasksContainerHandler;
+import cz.vse.java.handlers.TaskStateChangeHandler;
 import cz.vse.java.utils.database.DBConnection;
 import cz.vse.java.utils.database.DatabaseConnectionContainer;
 import cz.vse.java.utils.database.EDBUse;
@@ -89,10 +90,8 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
 
         this.update = true;
 
-
         super.clients.addMessageHandler(new ListeningForTasksContainerHandler(null));
-
-
+        super.clients.addMessageHandler(new TaskStateChangeHandler(null));
     }
 
     /* *****************************************************************/
