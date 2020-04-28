@@ -235,14 +235,9 @@ public class ServiceClientsManagement extends AConnectionManager implements Runn
 
             clients.remove(connection);
             LOG.log(Level.INFO, "Connection unregistered!");
-
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>. NOT IMPLEMENTED YET");
-
-            //TODO
         }
 
         notifyObservers();
-
         listenToNewClients();
     }
 

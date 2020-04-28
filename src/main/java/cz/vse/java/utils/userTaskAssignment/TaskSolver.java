@@ -69,17 +69,6 @@ public class TaskSolver implements IObserver {
 
         ((S2CConnection) connection).addObserver(this);
 
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ADDING OBSERVER");
-
-       /*
-        if(connection instanceof S2CConnection) {
-
-
-        } else {
-
-            throw new IllegalArgumentException("Not supported connection type!");
-        }*/
-
         this.tsc = tsc;
     }
 
@@ -128,7 +117,8 @@ public class TaskSolver implements IObserver {
                     new TaskService().update(task);
 
                 } catch (SQLException e) {
-                    e.printStackTrace();
+
+                    LOG.log(Level.SEVERE, "Failed to work with DB! " + e.getMessage());
                 }
 
                 this.connection.send(new AddTaskMessage(task));
@@ -158,8 +148,6 @@ public class TaskSolver implements IObserver {
             LOG.log(Level.SEVERE, "Updating connection");
 
             if(!conn.isRunning() && conn.isAuthenticated()) {
-
-                System.out.println("running: " + conn.isRunning() + " " + conn.isAuthenticated());
 
                 listening = false;
                 this.tsc.resetTasks(this);

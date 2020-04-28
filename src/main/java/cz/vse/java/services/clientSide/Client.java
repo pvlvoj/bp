@@ -699,7 +699,7 @@ public class Client extends AService implements Runnable, IObserver {
                     instance.messageTaskContainer.update();
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(2000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -722,15 +722,9 @@ public class Client extends AService implements Runnable, IObserver {
         //instance.addMessageTask(new MessageTask(new GiveMeRoles("jira00"), EServiceType.ROUTER));
 
 
-        try {
-            Thread.sleep(8000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         //String ident = instance.getPreOrder().getIdentificator();
 
-        Thread.sleep(2000);
+        //Thread.sleep(2000);
 /*
         instance.addMessageTask(new MessageTask(new GiveMeMyOrder(ident), EServiceType.ORDER_MANAGEMENT));
 
@@ -740,7 +734,11 @@ public class Client extends AService implements Runnable, IObserver {
 
         instance.addMessageTask(new MessageTask(new ListeningForTasksContainer(UserProperties.getInstance().getUserName(), true), EServiceType.TASK_SERVICE));
 
-        Thread.sleep(6000);
+        //Thread.sleep(6000);
+
+
+        //Task task = instance.getTasks().getTasks().get(0);
+
 
         //instance.addMessageTask(new MessageTask(new TryToGenerateOrder(ident), EServiceType.ORDER_MANAGEMENT));
 
