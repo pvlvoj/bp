@@ -18,6 +18,8 @@ import java.util.logging.Logger;
  * <p>The class of {@code RandomAssign} is used to abstractly define
  * the type of the instances.</p>
  *
+ * <p>Instances of this class are used for assigning tasks to the
+ * specified users by random.</p>
  *
  * <i>Written for project "Connections2".</i>
  * @author Vojtěch Pavlů
@@ -47,15 +49,19 @@ public class RandomAssign implements IAssignScenario {
     /* Constructors ****************************************************/
 
 
-    public RandomAssign() {
-
-    }
+    /**
+     * <p>Non-parametric constructor used for initializing the space.</p>
+     */
+    public RandomAssign() { }
 
     /* *****************************************************************/
     /* Instance methods ************************************************/
 
     /**
      * <p>Assigns the task to the user.</p>
+     *
+     * <p>The assignment is by random, when there is at least one
+     * listener to the tasks.</p>
      *
      * @param task task to be assigned
      */
@@ -72,20 +78,4 @@ public class RandomAssign implements IAssignScenario {
             ts.add(task);
         }
     }
-
-    /* *****************************************************************/
-    /* Static methods **************************************************/
-
-
-
-    /* *****************************************************************/
-    /* Getters *********************************************************/
-
-
-
-    /* *****************************************************************/
-    /* Setters *********************************************************/
-
-
-
 }

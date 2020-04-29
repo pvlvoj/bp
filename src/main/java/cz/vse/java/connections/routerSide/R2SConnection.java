@@ -192,10 +192,12 @@ public class R2SConnection implements ISSConnection {
                 }
             } catch (SocketException | EOFException e) {
 
+                e.printStackTrace();
                 close();
 
             } catch (IOException | ClassNotFoundException e) {
 
+                e.printStackTrace();
                 close();
             }
         }

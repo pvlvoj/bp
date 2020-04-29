@@ -36,9 +36,18 @@ public class FingerPrint implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    private static final Long serilVersionUID = 3451345L;
+
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
+    /**
+     * <p>Generates FingerPrint from given values.</p>
+     *
+     * @param ip            IP address
+     * @param mac           MAC address
+     * @param deviceName    Name of the device.
+     */
     public FingerPrint(String ip, String mac, String deviceName) {
 
         this.ip = ip;
@@ -46,6 +55,12 @@ public class FingerPrint implements Serializable {
         this.deviceName = deviceName;
     }
 
+    /**
+     * <p>Generates FingerPrint using {@link LocalDeviceProp} static methods.</p>
+     *
+     * <p>May be problems with {@code deviceName} or {@code MAC}, depends
+     * on settings of the device and it's network interface.</p>
+     */
     public FingerPrint() {
 
         try {

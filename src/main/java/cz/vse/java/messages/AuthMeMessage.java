@@ -37,6 +37,8 @@ public class AuthMeMessage extends AMessage {
     private static final Logger LOG =
             Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    private static final Long serilVersionUID = 34513445L;
+
     /* *****************************************************************/
     /* Constructors ****************************************************/
 

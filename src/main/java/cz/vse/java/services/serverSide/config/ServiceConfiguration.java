@@ -61,6 +61,16 @@ public class ServiceConfiguration {
     /* Instance methods ************************************************/
 
 
+    /**
+     * <p>Creates and registers (at the {@link Server}) the service
+     * defined by this instance.</p>
+     *
+     * <p>Chooses the possible {@link IService} by the
+     * {@link EServiceType} stored in {@code type} field. When
+     * no suitable is found, won't create or register anything and throws
+     * {@link IllegalArgumentException}.</p>
+     *
+     */
     public void create() {
 
         switch (this.type) {
@@ -120,6 +130,7 @@ public class ServiceConfiguration {
             default: {
 
                 LOG.log(Level.SEVERE, "Not suitable service type: " + type.name());
+                throw new IllegalArgumentException("Not suitable service type: " + type.name());
             }
         }
     }

@@ -97,23 +97,31 @@ public class Server implements Runnable, ISubject {
 
         for (AService service : this.services) {
 
-            System.out.println("Starting service of " + service.getServiceType().name());
             Thread t = new Thread(service);
             t.start();
-            t.setPriority(10);
+            t.setPriority(Thread.MAX_PRIORITY);
         }
     }
 
 
+    /**
+     * <p>Starts the router only.</p>
+     */
     public void startRouter() {
 
         if(router != null) {
 
-            new Thread(router).start();
+            Thread router = new Thread(this.router);
+            router.start();
+            router.setPriority(5);
         }
     }
 
-
+    /**
+     * <p>Adds service to the container of runnable services.</p>
+     *
+     * @param service   To be added
+     */
     public void addService(AService service) {
 
         synchronized (this.services) {

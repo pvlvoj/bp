@@ -59,6 +59,15 @@ public class ServerConfiguration {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
+    /**
+     * <p>Reads data from the given {@link Document} field ({@code doc}).
+     * Meanwhile it print's the data it reads to the console in tables.</p>
+     *
+     * <p>It also let's the user initializing the {@link Server} choose, if
+     * the configuration is correct.</p>
+     *
+     * @param doc   document it should work with.
+     */
     public ServerConfiguration(Document doc) {
 
         this.services = new CopyOnWriteArrayList<>();
@@ -198,6 +207,13 @@ public class ServerConfiguration {
     /* Instance methods ************************************************/
 
 
+    /**
+     * <p>Creates configuration of service by given service defining {@link Node}.</p>
+     *
+     * @param node  storing data about the configuration of service.
+     *
+     * @return      {@link ServiceConfiguration} containing given data.
+     */
     private ServiceConfiguration createServiceConf(Node node) {
 
         ListOfNodes children = new ListOfNodes(node.getChildNodes());
@@ -216,6 +232,11 @@ public class ServerConfiguration {
     }
 
 
+    /**
+     * <p>Starts the server by asking the user for acceptance
+     * of the generated data. When he accepts, the {@link Server}
+     * is about to run, otherwise is asked again or the server is closed.</p>
+     */
     private void startServer() {
 
         boolean done = false;
@@ -233,7 +254,7 @@ public class ServerConfiguration {
                 Server.getInstance().startRouter();
 
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -263,6 +284,17 @@ public class ServerConfiguration {
     /* *****************************************************************/
     /* Static methods **************************************************/
 
+
+    /**
+     * <p>Sets the DB connection to {@link DatabaseConnectionContainer} using
+     * {@link EDBUse} enum instance and {@link DBConnection},
+     * which is generated in here</p>
+     *
+     * @param name          name of the usage
+     * @param url           where the DB is at
+     * @param userName      user with privileges to run queries defined by this use
+     * @param password      password used for authentication of the user
+     */
     private static void setDBUse(String name, String url, String userName, String password) {
 
         EDBUse use = EDBUse.getByName(name);

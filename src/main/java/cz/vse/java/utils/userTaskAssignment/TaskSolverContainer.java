@@ -18,6 +18,8 @@ import java.util.logging.Logger;
  * <p>The class of {@code TaskSolverContainer} is used to abstractly define
  * the type of the instances.</p>
  *
+ * <p>Container for {@link TaskSolver}s. Managing the assignment and basic
+ * tasks related to it.</p>
  *
  * <i>Written for project "Connections2".</i>
  * @author Vojtěch Pavlů
@@ -25,6 +27,7 @@ import java.util.logging.Logger;
  *
  *
  * @see cz.vse.java.utils.userTaskAssignment
+ * @see TaskSolver
  */
 public class TaskSolverContainer {
 
@@ -49,6 +52,10 @@ public class TaskSolverContainer {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
+    /**
+     * <p>Constructor used for defining the {@link IAssignScenario}.</p>
+     * @param assigner  the assigner of the tasks.
+     */
     public TaskSolverContainer(IAssignScenario assigner) {
 
         this.container = new CopyOnWriteArrayList<>();
@@ -58,18 +65,35 @@ public class TaskSolverContainer {
     /* *****************************************************************/
     /* Instance methods ************************************************/
 
+    /**
+     * <p>Adds new {@link TaskSolver} by username and {@link IConnection}.</p>
+     *
+     * @param connection    where the user communicates at
+     * @param userName      used for communication
+     */
     public void add(IConnection connection, String userName) {
 
         this.container.add(new TaskSolver(userName, connection, this));
     }
 
 
+    /**
+     * <p>Manages the assignment of the task using given assigner.</p>
+     *
+     * @param task  to be assigned
+     */
     public void assign(Task task) {
 
         this.assigner.assign(this, task);
     }
 
 
+    /**
+     * <p>Resets tasks of the specified {@link TaskSolver},
+     * when the connection get's interrupted, for example.</p>
+     *
+     * @param ts    owner of the tasks.
+     */
     public void resetTasks(TaskSolver ts) {
 
         List<Task> tasks = ts.getTasks(ts.getUserName());
@@ -117,6 +141,11 @@ public class TaskSolverContainer {
     /* *****************************************************************/
     /* Getters *********************************************************/
 
+    /**
+     * <p>Returns all the usernames.</p>
+     *
+     * @return  {@link List} of {@link String}s with used usernames.
+     */
     public List<String> getNames() {
 
         List<String> names = new ArrayList<>();
@@ -130,6 +159,12 @@ public class TaskSolverContainer {
     }
 
 
+    /**
+     * <p>Gets all tasks assigned to specified username</p>
+     * @param userName  to be searched with
+     * @return          {@link List} of {@link Task}s assigned
+     * to this username
+     */
     public List<Task> getByName(String userName) {
 
         TaskSolver ts = this.getTaskSolver(userName);
@@ -142,6 +177,12 @@ public class TaskSolverContainer {
         return null;
     }
 
+    /**
+     * <p>Returns the {@link TaskSolver} by given username.</p>
+     * <p>Can return null when nothing found.</p>
+     * @param userName      to be searched with
+     * @return              {@link TaskSolver} with such an name or null
+     */
     public TaskSolver getTaskSolver(String userName) {
 
         for(TaskSolver ts : this.getContainer()) {
@@ -168,9 +209,4 @@ public class TaskSolverContainer {
 
         return container;
     }
-
-    /* *****************************************************************/
-    /* Setters *********************************************************/
-
-
 }

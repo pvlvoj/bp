@@ -23,6 +23,10 @@ import java.util.logging.Logger;
  * <p>The class of {@code TaskSolver} is used to abstractly define
  * the type of the instances.</p>
  *
+ * <p>The {@link TaskSolver} is an entity <i>solving tasks</i>. It means
+ * it listens to the tasks and is able to solve them. Instances of this class
+ * are defined by {@link String} username, {@link IConnection} where it listens,
+ * and boolean interpretation if the solver is currently listening to new tasks.</p>
  *
  * <i>Written for project "Connections2".</i>
  * @author Vojtěch Pavlů
@@ -60,6 +64,14 @@ public class TaskSolver implements IObserver {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
+
+    /**
+     * <p>Constructor for defining the fields.</p>
+     *
+     * @param userName      username
+     * @param connection    where the user is listening to
+     * @param tsc           container of these TaskSolvers
+     */
     public TaskSolver(String userName, IConnection connection, TaskSolverContainer tsc) {
 
         this.userName = userName;
@@ -75,6 +87,13 @@ public class TaskSolver implements IObserver {
     /* *****************************************************************/
     /* Instance methods ************************************************/
 
+    /**
+     * <p>Returns tasks this user has assigned.</p>
+     *
+     * @param userName  for check if it really is meant for this one.
+     *
+     * @return          {@link List} of {@link Task}s assigned to this user
+     */
     public List<Task> getTasks(String userName) {
 
         if(userName.equals(this.userName)) {
@@ -86,12 +105,23 @@ public class TaskSolver implements IObserver {
     }
 
 
+    /**
+     * <p>Number of the tasks set to the user.</p>
+     *
+     * @return  integer representation of number of
+     * tasks assigned to this user
+     */
     public int size() {
 
         return this.getTasks(this.userName).size();
     }
 
 
+    /**
+     * <p>Adds the given {@link Task} to the user assignments.</p>
+     *
+     * @param task      to be assigned
+     */
     public void add(Task task) {
 
         if(listening) {
@@ -127,6 +157,9 @@ public class TaskSolver implements IObserver {
     }
 
 
+    /**
+     * <p>Clears the tasks.</p>
+     */
     public void clearTasks() {
 
         this.container.clear();
@@ -138,8 +171,6 @@ public class TaskSolver implements IObserver {
      */
     @Override
     public void update() {
-
-        System.out.println("UPDATE");
 
         if(connection instanceof S2CConnection) {
 
@@ -160,6 +191,12 @@ public class TaskSolver implements IObserver {
     }
 
 
+    /**
+     * <p>Updates the {@link ETaskState} of the {@link Task}</p>
+     *
+     * @param state     to be set to
+     * @param taskID    ID of the task
+     */
     public void updateTaskState(ETaskState state, Long taskID) {
 
         for (Task t : this.getTasks(this.getUserName())) {
@@ -180,12 +217,6 @@ public class TaskSolver implements IObserver {
             }
         }
     }
-
-
-    /* *****************************************************************/
-    /* Static methods **************************************************/
-
-
 
     /* *****************************************************************/
     /* Getters *********************************************************/
