@@ -27,6 +27,9 @@ public enum EServiceType implements Serializable {
     TASK_SERVICE,
     ORDER_MANAGEMENT
 
+
+    ;
+
     /* *****************************************************************/
     /* Global parameters ***********************************************/
 
@@ -40,7 +43,21 @@ public enum EServiceType implements Serializable {
     /* *****************************************************************/
     /* Instance methods ************************************************/
 
+    public static EServiceType getByName(String name) {
 
+        EServiceType type = null;
+
+        for (EServiceType t : values()) {
+
+            if(t.name().equals(name)) {
+
+                type = t;
+                break;
+            }
+        }
+
+        return type;
+    }
 
     /* *****************************************************************/
     /* Getters *********************************************************/

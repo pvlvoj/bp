@@ -1,19 +1,15 @@
 <?xml version = "1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mstns="https://example.com/xsd.xsd"
-targetNamespace="https://example.com/xsd.xsd">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-    <xs:element name="serverConfiguration" type="configurationType" />
+    <xs:element name="serverConfiguration" type="confType" />
 
-    <xs:complexType name="configurationType">
+    <xs:complexType name="confType">
         <xs:sequence>
             <xs:element name="metaInfo" type="metaType" />
             <xs:element name="router" type="routerType" />
-            <xs:element name="service" type="serviceType" maxOccurs="unbounded">
-                <xs:unique name="uniquePort">
-                    <xs:selector xpath="mstns:port" />
-                    <xs:field xpath="." />
-                </xs:unique>
-            </xs:element>
+            <xs:element name="service" type="serviceType" maxOccurs="unbounded" />
+            <xs:element name="certs" type="certsType" />
+            <xs:element name="DBConns" type="dbConnsType" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -25,20 +21,58 @@ targetNamespace="https://example.com/xsd.xsd">
     </xs:complexType>
 
     <xs:complexType name="routerType">
+        <xs:choice>
+            <xs:element name="routerConfig" type="routerConfig" />
+            <xs:element name="connTo" type="connToType" />
+        </xs:choice>
+    </xs:complexType>
+
+
+    <xs:complexType name="routerConfig">
         <xs:sequence>
-            <xs:element name="ip" type="ipType"/>
+            <xs:element name="clientsPort" type="portType" />
+            <xs:element name="servicePort" type="portType" />
+            <xs:element name="policy" type="policyType" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="connToType">
+        <xs:sequence>
+            <xs:element name="ip" type="ipType" />
             <xs:element name="port" type="portType" />
-            <xs:element name="connType" type="connType" />
         </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="serviceType">
         <xs:sequence>
             <xs:element name="serviceName" type="serviceNameType" />
-            <xs:element name="port" type="portType" />
-            <xs:element name="policies" type="policiesType" />
+            <xs:element name="clientsPort" type="portType" />
+            <xs:element name="policy" type="policyType" />
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="certsType">
+        <xs:sequence>
+            <xs:element name="keyStore" type="xs:string" />
+            <xs:element name="keyStorePass" type="xs:string" />
+            <xs:element name="trustStore" type="xs:string" minOccurs="0"/>
+            <xs:element name="trustStorePass" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="policyType">
+        <xs:sequence>
+            <xs:element name="maxClients" type="maxConns" />
+            <xs:element name="maxServices" type="maxConns" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="maxConns">
+        <xs:restriction base="xs:integer">
+            <xs:minExclusive value="0" />
+            <xs:maxInclusive value="100" />
+        </xs:restriction>
+    </xs:simpleType>
     
     <xs:simpleType name="portType">
         <xs:restriction base="xs:integer">
@@ -52,76 +86,40 @@ targetNamespace="https://example.com/xsd.xsd">
             <xs:pattern value="(((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))|(localhost)" />
         </xs:restriction>
     </xs:simpleType>
-    
-    <xs:simpleType name="macType">
-        <xs:restriction base="xs:string">
-            <xs:pattern value="(([A-F]|[0-9]){2}:){5}([A-F]|[0-9]){2}" />
-        </xs:restriction>
-    </xs:simpleType>
-    
-    <xs:simpleType name="connType">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="basic" />
-            <xs:enumeration value="ssl" />
-        </xs:restriction>
-    </xs:simpleType>
-    
+
     <xs:simpleType name="serviceNameType">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="Router" />
-            <xs:enumeration value="Auth" />
-            <xs:enumeration value="UserManagement" />
-            <xs:enumeration value="LoggingStation" />
-            <xs:enumeration value="FileSaver" />
-            <!--<xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />
-            <xs:enumeration value="" />-->
+            <xs:enumeration value="EMPLOYEE_MANAGEMENT" />
+            <xs:enumeration value="TEXT_PRINTER" />
+            <xs:enumeration value="STORAGE_MANAGEMENT" />
+            <xs:enumeration value="TASK_SERVICE" />
+            <xs:enumeration value="ORDER_MANAGEMENT" />
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:complexType name="policiesType">
+    <xs:complexType name="dbConnsType">
         <xs:sequence>
-            <xs:element name="connection">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element name="type" type="connType" />
-                        <xs:element name="maxNum" type="maxConnNumType" />
-                        <xs:element name="allow" type="allowType" maxOccurs="unbounded"/>
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="access" type="accessType" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="allowType">
+    <xs:complexType name="accessType">
         <xs:sequence>
-            <xs:element name="ip" type="ipType2" />
-            <xs:element name="mac" type="macType2" />
+            <xs:element name="use" type="dbUseType" />
+            <xs:element name="url" type="xs:string" />
+            <xs:element name="user" type="xs:string" />
+            <xs:element name="password" type="xs:string" />
         </xs:sequence>
     </xs:complexType>
 
-    <xs:simpleType name="maxConnNumType">
-        <xs:restriction base="xs:integer">
-            <xs:minExclusive value="0" />
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="macType2">
+    <xs:simpleType name="dbUseType">
         <xs:restriction base="xs:string">
-            <xs:pattern value="((([A-F]|[0-9]){2}:){5}([A-F]|[0-9]){2})|(all)" />
-        </xs:restriction>
-    </xs:simpleType>
-
-    <xs:simpleType name="ipType2">
-        <xs:restriction base="xs:string">
-            <xs:pattern value="(((1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5]))|(localhost)|(all)" />
+            <xs:enumeration value="USER_AUTHENTICATION" />
+            <xs:enumeration value="FINGERPRINT_AUTHENTICATION" />
+            <xs:enumeration value="EMPLOYEE_MANAGEMENT" />
+            <xs:enumeration value="STORAGE_MANAGEMENT" />
+            <xs:enumeration value="TASK_MANAGEMENT" />
+            <xs:enumeration value="ORDERS_MANAGEMENT" />
         </xs:restriction>
     </xs:simpleType>
 

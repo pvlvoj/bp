@@ -63,7 +63,7 @@ public class DatabaseConnectionContainer {
 
     public void add(EDBUse use, DBConnection connection) {
 
-        LOG.log(Level.INFO, "Adding " + use.name() + " use of connection.");
+        //LOG.log(Level.INFO, "Adding " + use.name() + " use of connection.");
         this.connections.putIfAbsent(use, connection);
     }
 

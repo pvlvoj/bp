@@ -24,6 +24,9 @@ public enum EDBUse {
     TASK_MANAGEMENT,
     ORDERS_MANAGEMENT
 
+
+    ;
+
     /* *****************************************************************/
     /* Global parameters ***********************************************/
 
@@ -37,7 +40,21 @@ public enum EDBUse {
     /* *****************************************************************/
     /* Instance methods ************************************************/
 
+    public static EDBUse getByName(String name) {
 
+        EDBUse use = null;
+
+        for (EDBUse u : values()) {
+
+            if(name.equals(u.name())) {
+
+                use = u;
+                break;
+            }
+        }
+
+        return use;
+    }
 
     /* *****************************************************************/
     /* Getters *********************************************************/

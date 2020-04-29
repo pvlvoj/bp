@@ -2,11 +2,26 @@ package cz.vse.java.services.serverSide;
 
 
 import cz.vse.java.services.clientSide.Client;
+import cz.vse.java.services.serverSide.config.ServerConfiguration;
+import cz.vse.java.utils.database.DBConnection;
+import cz.vse.java.utils.database.DatabaseConnectionContainer;
+import cz.vse.java.utils.database.EDBUse;
 import cz.vse.java.utils.observerDP.IObserver;
 import cz.vse.java.utils.observerDP.ISubject;
+import cz.vse.java.utils.xml.ListOfNodes;
+import cz.vse.java.utils.xml.User;
+import cz.vse.java.utils.xml.XMLSchemaValidator;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -31,7 +46,7 @@ public class Server implements Runnable, ISubject {
     /* *******************************************************/
     /* Instance variables ************************************/
 
-    private CopyOnWriteArrayList<AService> services;
+    private final CopyOnWriteArrayList<AService> services;
     private Router router;
     private final CopyOnWriteArrayList<IObserver> observers;
 
@@ -59,20 +74,6 @@ public class Server implements Runnable, ISubject {
     private Server() {
 
         this.services = new CopyOnWriteArrayList<>();
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("stores/keyStore.jks").getFile());
-
-        this.router = new Router(
-                50,
-                50,
-                9889,
-                888,
-                file.getAbsolutePath(),
-                "changeit"
-        );
-
-        this.services.addIfAbsent(router);
         this.observers = new CopyOnWriteArrayList<>();
     }
 
@@ -96,9 +97,28 @@ public class Server implements Runnable, ISubject {
 
         for (AService service : this.services) {
 
+            System.out.println("Starting service of " + service.getServiceType().name());
             Thread t = new Thread(service);
             t.start();
             t.setPriority(10);
+        }
+    }
+
+
+    public void startRouter() {
+
+        if(router != null) {
+
+            new Thread(router).start();
+        }
+    }
+
+
+    public void addService(AService service) {
+
+        synchronized (this.services) {
+
+            this.services.addIfAbsent(service);
         }
     }
 
@@ -148,8 +168,39 @@ public class Server implements Runnable, ISubject {
     }
 
 
+    /**
+     * <p>Loads the data from configuration XML file and before that
+     * it's validated using the given XSD schema.</p>
+     *
+     * @param configFilePath        XML file path of configuration
+     * @param schemaFilePath        XSD file path of schema
+     */
+    public void load(String configFilePath, String schemaFilePath) {
+
+        try {
+
+            if (new XMLSchemaValidator(configFilePath, schemaFilePath).validate()) {
+
+                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+                dbFactory.setIgnoringComments(true);
+                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+                Document doc = dBuilder.parse(configFilePath);
+                doc.getDocumentElement().normalize();
+
+                new ServerConfiguration(doc);
+            }
+
+        } catch (Exception e) {
+
+            LOG.log(Level.SEVERE, "XML configuration file is not valid, " +
+                    "does not exist or validation schema does not exist!\n" + e.getMessage());
+        }
+    }
+
+
     /* *******************************************************/
     /* Getters and setters ***********************************/
+
 
     /**
      * Getter for {@link CopyOnWriteArrayList<>}-formed {@code services} of
@@ -163,6 +214,21 @@ public class Server implements Runnable, ISubject {
 
         return services;
     }
+
+    /**
+     * <p>Setter for the {@code Router} formed
+     * {@code router} variable.</p>
+     *
+     * @param router given Router value to
+     *               be set to the variable
+     * @see Router
+     * @see Server
+     */
+    public void setRouter(Router router) {
+
+        this.router = router;
+    }
+
 
     /* *******************************************************/
     /* Static methods ****************************************/
@@ -205,5 +271,73 @@ public class Server implements Runnable, ISubject {
     public static void reset() {
 
         singletonInstance = null;
+    }
+
+
+    public static void main(String[] args) throws Exception {
+
+
+        /*
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.USER_AUTHENTICATION,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.FINGERPRINT_AUTHENTICATION,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.EMPLOYEE_MANAGEMENT,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.STORAGE_MANAGEMENT,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        DatabaseConnectionContainer.getInstance().add(
+                EDBUse.TASK_MANAGEMENT,
+                new DBConnection("jdbc:h2:tcp://localhost/~/test", "sa", "")
+        );
+
+        Server s = Server.getInstance();
+
+
+        ClassLoader classLoader = Server.getInstance().getClass().getClassLoader();
+        File file = new File(classLoader.getResource("stores/keyStore.jks").getFile());
+        ClassLoader classLoader2 = Server.getInstance().getClass().getClassLoader();
+        File file2 = new File(classLoader2.getResource("stores/trustStore.jts").getFile());
+
+
+        Router router = new Router(
+                50,
+                50,
+                9889,
+                888,
+                file.getAbsolutePath(),
+                "changeit"
+        );
+
+        s.setRouter(router);
+
+        s.startRouter();
+
+        s.addService(new OrderManagement(
+                "localhost",
+                888,
+                1010,
+                50,
+                file2.getAbsolutePath(), "changeit",
+                file.getAbsolutePath(), "changeit"
+        ));
+
+        System.out.println("Starting...");
+
+        Thread t = new Thread(s);
+        t.start();*/
+
     }
 }
