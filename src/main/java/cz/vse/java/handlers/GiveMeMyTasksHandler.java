@@ -12,9 +12,14 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.IService;
 import cz.vse.java.services.serverSide.TaskManagement;
+import cz.vse.java.util.persistance.entities.tasks.ETaskState;
 import cz.vse.java.util.persistance.entities.tasks.Task;
+import cz.vse.java.util.persistance.service.TaskService;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -76,9 +81,40 @@ public class GiveMeMyTasksHandler extends AHandler {
             if(s.getServiceType().equals(EServiceType.TASK_SERVICE)) {
 
                 TaskManagement tm = (TaskManagement) s;
-
                 String username = ((GiveMeMyTasks) message).getContent();
-                List<Task> tasks = tm.getTasks(username);
+
+                TaskService ts = new TaskService();
+
+                List<Task> tasks = new ArrayList<>();
+
+                try {
+
+                    tasks.addAll(ts.getByUserNameAndState(username, ETaskState.ASSIGNED));
+                    tasks.addAll(ts.getByUserNameAndState(username, ETaskState.CONFIRMED));
+
+                } catch (SQLException e) {
+
+                    LOG.log(Level.SEVERE, "Unable to get data from this DB! " + e.getMessage());
+                }
+
+                List<Task> tasks2 = tm.getTasks(username);
+
+                for (Task t : tasks) {
+
+                    Task toBeRemoved = null;
+
+                    for (Task t2 : tasks2) {
+
+                        if(t.getId().equals(t2.getId())) {
+
+                            toBeRemoved = t2;
+                        }
+                    }
+
+                    tasks2.remove(toBeRemoved);
+                }
+
+                tasks.addAll(tasks2);
 
                 connection.send(new AllTasksContainer(tasks));
 

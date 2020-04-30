@@ -31,9 +31,6 @@ import java.util.logging.Logger;
  * <i>Written for project "Connections2".</i>
  * @author Vojtěch Pavlů
  * @version 18. 04. 2020
- *
- *
- * @see cz.vse.java.utils.userTaskAssignment
  */
 public class TaskSolver implements IObserver {
 
