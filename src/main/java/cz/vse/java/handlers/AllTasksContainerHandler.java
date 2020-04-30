@@ -74,10 +74,6 @@ public class AllTasksContainerHandler extends AHandler {
 
             if(s.getServiceType().equals(EServiceType.CLIENT)) {
 
-                Client.getInstance().clearTasks();
-
-                LOG.log(Level.INFO, "Old tasks cleared.");
-
                 List<Task> tasks = ((AllTasksContainer) message).getContent();
 
                 for (Task t : tasks) {

@@ -6,6 +6,7 @@ import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.handlers.utils.AHandler;
 import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
+import cz.vse.java.messages.AddTaskMessage;
 import cz.vse.java.messages.TaskStateChange;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
@@ -92,16 +93,18 @@ public class TaskStateChangeHandler extends AHandler {
 
                         if(t.getId().equals(id)) {
 
-                            t.setState(state);
                             try {
                                 LOG.log(Level.SEVERE, "Updating the task state with ID like "
                                         + id + " to the " + state.getDesc());
                                 new TaskService().update(t);
+                                t.setState(state);
+                                connection.send(new AddTaskMessage(t));
 
                             } catch (SQLException e) {
 
                                 LOG.log(Level.SEVERE, "Connection with DB failed! " + e.getMessage());
                             }
+
                             break;
                         }
                     }

@@ -330,8 +330,6 @@ public class Client extends AService implements Runnable, IObserver {
 
         this.messageTaskContainer.add(task);
         this.messageTaskContainer.update();
-
-        System.out.println("ADDING MT: " + task.getMessage().getClass().getName());
     }
 
 
@@ -351,14 +349,14 @@ public class Client extends AService implements Runnable, IObserver {
      */
     public void addTask(Task task) {
 
-        System.out.println("Adding task: " + task);
-
+        System.out.println("Task state: " + task.getState().getDesc());
+        System.out.println("Number of tasks: " + this.tasks.getTasks().size());
         this.tasks.remove(task.getId());
+        System.out.println("Number of tasks: " + this.tasks.getTasks().size());
         this.tasks.add(task);
+        System.out.println("Number of tasks: " + this.tasks.getTasks().size());
 
         if(task.getState().equals(ETaskState.ASSIGNED)) {
-
-            LOG.log(Level.INFO, "Task was just 'assigned', the state set to 'confirmed'.");
 
             task.setState(ETaskState.CONFIRMED);
 

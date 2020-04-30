@@ -26,7 +26,6 @@ import java.util.logging.Logger;
  * @version 18. 04. 2020
  *
  *
- * @see cz.vse.java.utils.userTaskAssignment
  * @see TaskSolver
  */
 public class TaskSolverContainer {
@@ -96,7 +95,7 @@ public class TaskSolverContainer {
      */
     public void resetTasks(TaskSolver ts) {
 
-        List<Task> tasks = ts.getTasks(ts.getUserName());
+        List<Task> tasks = new ArrayList<>();
 
         TaskService taskService = new TaskService();
 
@@ -114,16 +113,19 @@ public class TaskSolverContainer {
 
         for (Task t : tasks) {
 
-            t.setState(ETaskState.NOT_ASSIGNED);
-            t.setUser(null);
+            if(!t.getState().equals(ETaskState.DONE) && !t.getState().equals(ETaskState.NOT_DONE)) {
 
-            try {
+                t.setState(ETaskState.NOT_ASSIGNED);
+                t.setUser(null);
 
-                taskService.update(t);
+                try {
 
-            } catch (SQLException e) {
+                    taskService.update(t);
 
-                e.printStackTrace();
+                } catch (SQLException e) {
+
+                    e.printStackTrace();
+                }
             }
         }
 

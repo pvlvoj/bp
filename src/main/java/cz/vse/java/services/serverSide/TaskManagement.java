@@ -3,6 +3,7 @@ package cz.vse.java.services.serverSide;
 
 import cz.vse.java.handlers.GiveMeMyTasksHandler;
 import cz.vse.java.handlers.ListeningForTasksContainerHandler;
+import cz.vse.java.handlers.RefuseTaskHandler;
 import cz.vse.java.handlers.TaskStateChangeHandler;
 import cz.vse.java.util.database.DBConnection;
 import cz.vse.java.util.database.DatabaseConnectionContainer;
@@ -93,6 +94,7 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
         super.clients.addMessageHandler(new ListeningForTasksContainerHandler(null));
         super.clients.addMessageHandler(new TaskStateChangeHandler(null));
         super.clients.addMessageHandler(new GiveMeMyTasksHandler(null));
+        super.clients.addMessageHandler(new RefuseTaskHandler(null));
     }
 
     /* *****************************************************************/

@@ -421,6 +421,7 @@ public class TaskService extends AEntityService implements IPersistor {
                 "SELECT * FROM TASK " +
                 "JOIN EMPLOYEES ON TASK.EMP_ID = EMPLOYEES.ID " +
                 "WHERE EMPLOYEES.USERNAME LIKE ? AND TASK.TASK_STATE_ID = ?";
+
         PreparedStatement ps = conn.prepareStatement(query);
         ps.setString(1, username);
         ps.setLong(2, state.getId());

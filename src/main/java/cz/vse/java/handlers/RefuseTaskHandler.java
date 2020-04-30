@@ -5,21 +5,23 @@ import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.handlers.utils.AHandler;
 import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
-import cz.vse.java.messages.AllTasksContainer;
-import cz.vse.java.messages.ClearYourTasks;
-import cz.vse.java.messages.GiveMeMyTasks;
+import cz.vse.java.messages.RefuseTask;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.IService;
 import cz.vse.java.services.serverSide.TaskManagement;
+import cz.vse.java.util.persistance.entities.tasks.ETaskState;
 import cz.vse.java.util.persistance.entities.tasks.Task;
+import cz.vse.java.util.persistance.service.TaskService;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*********************************************************************
- * <p>The class of {@code GiveMeMyTasksHandler} is used to abstractly define
+ * <p>The class of {@code RefuseTaskHandler} is used to abstractly define
  * the type of the instances.</p>
  *
  *
@@ -30,7 +32,7 @@ import java.util.logging.Logger;
  *
  * @see cz.vse.java.handlers
  */
-public class GiveMeMyTasksHandler extends AHandler {
+public class RefuseTaskHandler extends AHandler {
 
 
     /* *****************************************************************/
@@ -43,7 +45,7 @@ public class GiveMeMyTasksHandler extends AHandler {
 
     /**
      * <p>Private static instance of the {@link Logger}
-     * - the logger of the {@link GiveMeMyTasksHandler class</p>
+     * - the logger of the {@link RefuseTaskHandler class</p>
      */
     private static final Logger LOG =
             Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -51,10 +53,11 @@ public class GiveMeMyTasksHandler extends AHandler {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
-    public GiveMeMyTasksHandler(HandlerContainer container) {
+    public RefuseTaskHandler(HandlerContainer container) {
 
         super(container);
     }
+
 
     /* *****************************************************************/
     /* Instance methods ************************************************/
@@ -69,7 +72,7 @@ public class GiveMeMyTasksHandler extends AHandler {
     @Override
     public boolean handle(IConnection connection, IMessage message) {
 
-        if(message instanceof GiveMeMyTasks) {
+        if(message instanceof RefuseTask) {
 
             IService s = connection.getConnectionManager().getService();
 
@@ -77,10 +80,45 @@ public class GiveMeMyTasksHandler extends AHandler {
 
                 TaskManagement tm = (TaskManagement) s;
 
-                String username = ((GiveMeMyTasks) message).getContent();
+                String username = (String) ((RefuseTask) message).getContent()[0];
+                Long id = (Long) ((RefuseTask) message).getContent()[1];
+
                 List<Task> tasks = tm.getTasks(username);
 
-                connection.send(new AllTasksContainer(tasks));
+                Task toBeRemoved = null;
+
+                for (Task t : tasks) {
+
+                    if(t.getId().equals(id)) {
+
+                        t.setUser(null);
+                        t.setState(ETaskState.NOT_ASSIGNED);
+
+                        TaskService ts = new TaskService();
+
+                        toBeRemoved = t;
+
+                        try {
+
+                            ts.update(t);
+
+                        } catch (SQLException e) {
+
+                            LOG.log(Level.SEVERE, "Problem while connecting to DB! " + e.getMessage());
+                        }
+                    }
+                }
+
+                if(toBeRemoved != null) {
+
+                    tm.getTaskSolverContainer()
+                            .getTaskSolver(username)
+                            .getTasks(username)
+                            .remove(toBeRemoved);
+
+                    LOG.log(Level.SEVERE, "Task removed and gonna be reassigned! "
+                            + toBeRemoved.toString());
+                }
 
                 return true;
             }
@@ -98,7 +136,7 @@ public class GiveMeMyTasksHandler extends AHandler {
     @Override
     public IHandler copy(HandlerContainer container) {
 
-        return new GiveMeMyTasksHandler(container);
+        return new RefuseTaskHandler(container);
     }
 
     /* *****************************************************************/
@@ -121,14 +159,14 @@ public class GiveMeMyTasksHandler extends AHandler {
 
 
     /**
-     * The main method of the class of GiveMeMyTasksHandler.
+     * The main method of the class of RefuseTaskHandler.
      *
      */
   /*  public static void main(String[] args){
         
-        System.err.println(">>> QuickTest: GiveMeMyTasksHandler class");
-        System.err.println(">>> Creating GiveMeMyTasksHandler instance...");
-        GiveMeMyTasksHandler instance = new GiveMeMyTasksHandler();
+        System.err.println(">>> QuickTest: RefuseTaskHandler class");
+        System.err.println(">>> Creating RefuseTaskHandler instance...");
+        RefuseTaskHandler instance = new RefuseTaskHandler();
         
         System.out.println(instance.toString());
         
