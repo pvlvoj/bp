@@ -4,7 +4,7 @@ package cz.vse.java.util.persistance.entities.tasks;
 import cz.vse.java.util.persistance.entities.IEntity;
 import cz.vse.java.util.persistance.entities.OrderItem;
 import cz.vse.java.util.persistance.entities.User;
-import cz.vse.java.utils.persistance.entities.*;
+import cz.vse.java.util.persistance.entities.*;
 
 import java.time.LocalDateTime;
 import java.util.logging.Logger;

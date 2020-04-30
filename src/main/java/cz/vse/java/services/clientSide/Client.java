@@ -335,9 +335,11 @@ public class Client extends AService implements Runnable, IObserver {
     }
 
 
-    public void clearTasks() {
+    public boolean clearTasks() {
 
         this.tasks.clear();
+
+        return true;
     }
 
 
@@ -430,19 +432,13 @@ public class Client extends AService implements Runnable, IObserver {
     }
 
 
-
     public void requestAllMyTasks() {
 
-        /*
         this.addMessageTask(new MessageTask(
 
-                new GiveMeTasksMessage(UserProperties.getInstance().getUserName()),
+                new GiveMeMyTasks(UserProperties.getInstance().getUserName()),
                 EServiceType.TASK_SERVICE)
-        );*/
-
-        System.out.println(">>>>>>>>>>>>>>>>>>>. NOT IMPLEMENTED YET");
-
-        //TODO
+        );
     }
 
 

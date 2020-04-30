@@ -37,7 +37,6 @@
       <version>1.0</version>
       <scope>system</scope>
       <systemPath>${pom.basedir}/lib/utils-1.0.jar</systemPath>
-      <!--<systemPath>${project.basedir}/lib/utils-1.0.jar</systemPath>-->
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
@@ -119,9 +118,14 @@
         <version>3.1.1</version>
 
         <configuration>
-          <descriptorRefs>
+          <descriptors>
+            <descriptor>
+              ${pom.basedir}/assembly.xml
+            </descriptor>
+          </descriptors>
+          <!--<descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
+          </descriptorRefs>-->
         </configuration>
 
         <executions>

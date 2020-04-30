@@ -131,6 +131,8 @@ public class C2SConnection implements ICSConnection, ISubject, IProblemSolver {
         this.handlers.add(new PreOrderContainerMessageHandler(handlers));
         this.handlers.add(new OrderTransformationResultHandler(handlers));
         this.handlers.add(new AddTaskMessageHandler(handlers));
+        this.handlers.add(new AllTasksContainerHandler(handlers));
+        this.handlers.add(new ClearYourTasksHandler(handlers));
 
         this.problemSolvers = new ProblemSolverContainer();
         this.problemSolvers.add(new WrongUsername(ESolveMethod.POLITE_CLOSE));

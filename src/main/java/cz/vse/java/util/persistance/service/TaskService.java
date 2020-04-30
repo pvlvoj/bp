@@ -7,7 +7,7 @@ import cz.vse.java.util.database.EDBUse;
 import cz.vse.java.util.persistance.entities.IEntity;
 import cz.vse.java.util.persistance.entities.OrderItem;
 import cz.vse.java.util.persistance.entities.User;
-import cz.vse.java.utils.persistance.entities.*;
+import cz.vse.java.util.persistance.entities.*;
 import cz.vse.java.util.persistance.entities.tasks.ETaskState;
 import cz.vse.java.util.persistance.entities.tasks.Task;
 

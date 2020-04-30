@@ -8,7 +8,7 @@ import cz.vse.java.util.persistance.entities.Product;
 import cz.vse.java.util.persistance.entities.User;
 import cz.vse.java.util.persistance.entities.tasks.ETaskState;
 import cz.vse.java.util.persistance.entities.tasks.Task;
-import cz.vse.java.utils.persistance.entities.*;
+import cz.vse.java.util.persistance.entities.*;
 import cz.vse.java.util.persistance.entities.orders.Order;
 
 import java.sql.Connection;
