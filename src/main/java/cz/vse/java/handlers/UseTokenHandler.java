@@ -12,7 +12,7 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.AGeneralService;
 import cz.vse.java.services.clientSide.Client;
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

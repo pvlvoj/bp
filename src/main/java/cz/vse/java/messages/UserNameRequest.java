@@ -3,7 +3,7 @@ package cz.vse.java.messages;
 
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.IRequest;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 
 /*********************************************************************

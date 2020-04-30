@@ -18,10 +18,10 @@ import cz.vse.java.services.serverSide.AGeneralService;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.references.EReferenceFor;
 import cz.vse.java.services.references.ServiceReference;
-import cz.vse.java.utils.SSLClientConfigManager;
-import cz.vse.java.utils.Token;
-import cz.vse.java.utils.observerDP.IObserver;
-import cz.vse.java.utils.observerDP.ISubject;
+import cz.vse.java.util.SSLClientConfigManager;
+import cz.vse.java.util.Token;
+import cz.vse.java.util.observerDP.IObserver;
+import cz.vse.java.util.observerDP.ISubject;
 
 import javax.net.ssl.SSLSocket;
 import java.io.EOFException;

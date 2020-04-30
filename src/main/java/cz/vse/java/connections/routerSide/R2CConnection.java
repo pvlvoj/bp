@@ -17,10 +17,10 @@ import cz.vse.java.messages.AuthenticationResultContainer;
 import cz.vse.java.messages.QuitMessage;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.ConnectionAutoCloser;
-import cz.vse.java.utils.Token;
-import cz.vse.java.utils.database.DatabaseConnectionContainer;
-import cz.vse.java.utils.database.EDBUse;
+import cz.vse.java.util.ConnectionAutoCloser;
+import cz.vse.java.util.Token;
+import cz.vse.java.util.database.DatabaseConnectionContainer;
+import cz.vse.java.util.database.EDBUse;
 
 import java.io.EOFException;
 import java.io.IOException;

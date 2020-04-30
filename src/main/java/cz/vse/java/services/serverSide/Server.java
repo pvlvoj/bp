@@ -1,25 +1,14 @@
 package cz.vse.java.services.serverSide;
 
 
-import cz.vse.java.services.clientSide.Client;
 import cz.vse.java.services.serverSide.config.ServerConfiguration;
-import cz.vse.java.utils.database.DBConnection;
-import cz.vse.java.utils.database.DatabaseConnectionContainer;
-import cz.vse.java.utils.database.EDBUse;
-import cz.vse.java.utils.observerDP.IObserver;
-import cz.vse.java.utils.observerDP.ISubject;
-import cz.vse.java.utils.xml.ListOfNodes;
-import cz.vse.java.utils.xml.User;
+import cz.vse.java.util.observerDP.IObserver;
+import cz.vse.java.util.observerDP.ISubject;
 import cz.vse.java.utils.xml.XMLSchemaValidator;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

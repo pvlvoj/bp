@@ -1,5 +1,6 @@
 package cz.vse.java.utils;
 
+import cz.vse.java.util.Token;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -13,7 +13,8 @@ import cz.vse.java.messages.FingerPrintContainerRequest;
 import cz.vse.java.messages.utils.EErrorType;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.FingerPrint;
+import cz.vse.java.util.database.DBConnection;
+import cz.vse.java.util.FingerPrint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,7 +48,7 @@ public class FingerPrintDBAuthenticator extends AHandler implements IAuthenticat
 
     /**
      * {@link Connection} instance created by
-     * {@link cz.vse.java.utils.database.DBConnection} with database.
+     * {@link DBConnection} with database.
      */
     private Connection database;
 

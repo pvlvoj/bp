@@ -8,7 +8,6 @@ import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.messages.RolesContainerMessage;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.userData.ERole;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -10,8 +10,8 @@ import cz.vse.java.messages.ListeningForTasksContainer;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.IService;
 import cz.vse.java.services.serverSide.TaskManagement;
-import cz.vse.java.utils.userTaskAssignment.TaskSolver;
-import cz.vse.java.utils.userTaskAssignment.TaskSolverContainer;
+import cz.vse.java.util.userTaskAssignment.TaskSolver;
+import cz.vse.java.util.userTaskAssignment.TaskSolverContainer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

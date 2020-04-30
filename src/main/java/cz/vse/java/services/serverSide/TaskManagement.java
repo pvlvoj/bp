@@ -3,17 +3,16 @@ package cz.vse.java.services.serverSide;
 
 import cz.vse.java.handlers.ListeningForTasksContainerHandler;
 import cz.vse.java.handlers.TaskStateChangeHandler;
-import cz.vse.java.utils.database.DBConnection;
-import cz.vse.java.utils.database.DatabaseConnectionContainer;
-import cz.vse.java.utils.database.EDBUse;
-import cz.vse.java.utils.observerDP.IObserver;
-import cz.vse.java.utils.persistance.entities.IEntity;
-import cz.vse.java.utils.persistance.entities.tasks.ETaskState;
-import cz.vse.java.utils.persistance.entities.tasks.Task;
-import cz.vse.java.utils.persistance.service.TaskService;
-import cz.vse.java.utils.userTaskAssignment.IAssignScenario;
-import cz.vse.java.utils.userTaskAssignment.RandomAssign;
-import cz.vse.java.utils.userTaskAssignment.TaskSolverContainer;
+import cz.vse.java.util.database.DBConnection;
+import cz.vse.java.util.database.DatabaseConnectionContainer;
+import cz.vse.java.util.database.EDBUse;
+import cz.vse.java.util.observerDP.IObserver;
+import cz.vse.java.util.persistance.entities.tasks.ETaskState;
+import cz.vse.java.util.persistance.entities.tasks.Task;
+import cz.vse.java.util.persistance.service.TaskService;
+import cz.vse.java.util.userTaskAssignment.IAssignScenario;
+import cz.vse.java.util.userTaskAssignment.RandomAssign;
+import cz.vse.java.util.userTaskAssignment.TaskSolverContainer;
 
 import java.io.File;
 import java.sql.SQLException;

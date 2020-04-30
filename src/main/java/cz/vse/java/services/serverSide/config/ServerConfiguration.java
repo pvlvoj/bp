@@ -4,16 +4,14 @@ package cz.vse.java.services.serverSide.config;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.Router;
 import cz.vse.java.services.serverSide.Server;
-import cz.vse.java.utils.database.DBConnection;
-import cz.vse.java.utils.database.DatabaseConnectionContainer;
-import cz.vse.java.utils.database.EDBUse;
+import cz.vse.java.util.database.DBConnection;
+import cz.vse.java.util.database.DatabaseConnectionContainer;
+import cz.vse.java.util.database.EDBUse;
 import cz.vse.java.utils.xml.ListOfNodes;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
@@ -105,8 +103,21 @@ public class ServerConfiguration {
             this.routerIP = "localhost";
             int maxC = Integer.parseInt(new ListOfNodes(confProps.item(2)
                     .getChildNodes()).item(0).getTextContent());
-            int maxS = Integer.parseInt(new ListOfNodes(confProps.item(2)
-                    .getChildNodes()).item(1).getTextContent());
+
+            int maxS;
+
+            String numOfServices = new ListOfNodes(confProps.item(2)
+                    .getChildNodes()).item(1).getTextContent();
+
+            if(numOfServices.isEmpty() || numOfServices.isBlank()) {
+
+                maxS = 10;
+
+            } else {
+
+                maxS = Integer.parseInt(numOfServices);
+            }
+
 
             Router router = new Router(maxC, maxS, cPort, this.routerPort, this.ksPath, this.ksPass);
             Server.getInstance().setRouter(router);

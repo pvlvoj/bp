@@ -9,7 +9,7 @@ import cz.vse.java.messages.OrderContainerMessage;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.IService;
 import cz.vse.java.services.serverSide.OrderManagement;
-import cz.vse.java.utils.persistance.entities.orders.Order;
+import cz.vse.java.util.persistance.entities.orders.Order;
 
 import java.util.logging.Logger;
 

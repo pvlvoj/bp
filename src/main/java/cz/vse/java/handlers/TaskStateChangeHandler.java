@@ -11,9 +11,9 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.IService;
 import cz.vse.java.services.serverSide.TaskManagement;
-import cz.vse.java.utils.persistance.entities.tasks.ETaskState;
-import cz.vse.java.utils.persistance.entities.tasks.Task;
-import cz.vse.java.utils.persistance.service.TaskService;
+import cz.vse.java.util.persistance.entities.tasks.ETaskState;
+import cz.vse.java.util.persistance.entities.tasks.Task;
+import cz.vse.java.util.persistance.service.TaskService;
 
 import java.sql.SQLException;
 import java.util.List;

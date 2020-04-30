@@ -12,7 +12,7 @@ import cz.vse.java.messages.ProductByIDRequest;
 import cz.vse.java.messages.utils.EErrorType;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.StorageService;
-import cz.vse.java.utils.persistance.entities.Product;
+import cz.vse.java.util.persistance.entities.Product;
 
 import java.sql.SQLException;
 import java.util.logging.Level;

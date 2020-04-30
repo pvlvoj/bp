@@ -9,7 +9,7 @@ import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.messages.UserNameContainerMessage;
 import cz.vse.java.messages.UserNameRequest;
-import cz.vse.java.utils.userData.UserProperties;
+import cz.vse.java.util.userData.UserProperties;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

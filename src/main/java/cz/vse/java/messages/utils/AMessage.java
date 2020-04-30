@@ -1,8 +1,8 @@
 package cz.vse.java.messages.utils;
 
 
-import cz.vse.java.utils.FingerPrint;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.FingerPrint;
+import cz.vse.java.util.Token;
 
 
 /*********************************************************************

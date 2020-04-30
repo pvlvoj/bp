@@ -14,9 +14,9 @@ import cz.vse.java.messages.*;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.references.ServiceReference;
-import cz.vse.java.utils.ConnectionAutoCloser;
-import cz.vse.java.utils.Token;
-import cz.vse.java.utils.database.DBConnection;
+import cz.vse.java.util.ConnectionAutoCloser;
+import cz.vse.java.util.Token;
+import cz.vse.java.util.database.DBConnection;
 
 import java.io.EOFException;
 import java.io.IOException;

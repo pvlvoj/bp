@@ -17,10 +17,10 @@ import cz.vse.java.messages.utils.EErrorType;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.clientSide.Client;
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.SSLClientConfigManager;
-import cz.vse.java.utils.Token;
-import cz.vse.java.utils.observerDP.IObserver;
-import cz.vse.java.utils.observerDP.ISubject;
+import cz.vse.java.util.SSLClientConfigManager;
+import cz.vse.java.util.Token;
+import cz.vse.java.util.observerDP.IObserver;
+import cz.vse.java.util.observerDP.ISubject;
 
 import javax.net.ssl.SSLSocket;
 import java.io.EOFException;

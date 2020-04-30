@@ -4,10 +4,6 @@ package cz.vse.java.messages;
 import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.ICommand;
-import cz.vse.java.messages.utils.future.MessageTask;
-import cz.vse.java.services.clientSide.Client;
-import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.userData.UserProperties;
 
 import java.util.logging.Logger;
 

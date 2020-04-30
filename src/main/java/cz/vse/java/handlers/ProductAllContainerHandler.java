@@ -8,7 +8,7 @@ import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.messages.ProductAllContainer;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.clientSide.Client;
-import cz.vse.java.utils.persistance.entities.Product;
+import cz.vse.java.util.persistance.entities.Product;
 
 import java.util.logging.Logger;
 

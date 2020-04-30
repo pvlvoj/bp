@@ -11,7 +11,7 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.clientSide.Client;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.IService;
-import cz.vse.java.utils.persistance.entities.tasks.Task;
+import cz.vse.java.util.persistance.entities.tasks.Task;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

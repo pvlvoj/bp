@@ -12,8 +12,8 @@ import cz.vse.java.messages.utils.EErrorType;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.IService;
 import cz.vse.java.services.serverSide.StorageService;
-import cz.vse.java.utils.persistance.entities.Product;
-import cz.vse.java.utils.persistance.service.ProductService;
+import cz.vse.java.util.persistance.entities.Product;
+import cz.vse.java.util.persistance.service.ProductService;
 
 import java.sql.SQLException;
 import java.util.logging.Level;

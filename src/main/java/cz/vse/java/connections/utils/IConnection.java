@@ -5,7 +5,7 @@ import cz.vse.java.connections.utils.management.AConnectionManager;
 import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.messages.utils.IMessage;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 /**************************************************************
  * <p>The interface of IConnection is used to contain all methods

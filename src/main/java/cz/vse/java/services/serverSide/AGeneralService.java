@@ -4,11 +4,10 @@ package cz.vse.java.services.serverSide;
 import cz.vse.java.connections.utils.management.RouterClientsManagement;
 import cz.vse.java.connections.utils.management.ServiceClientsManagement;
 import cz.vse.java.connections.utils.management.ServiceRouterManagement;
-import cz.vse.java.utils.observerDP.IObserver;
-import cz.vse.java.utils.observerDP.ISubject;
+import cz.vse.java.util.observerDP.IObserver;
+import cz.vse.java.util.observerDP.ISubject;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -1,7 +1,7 @@
 package cz.vse.java.services.references;
 
 
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

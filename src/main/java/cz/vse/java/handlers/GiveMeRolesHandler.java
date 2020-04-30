@@ -12,10 +12,10 @@ import cz.vse.java.messages.RolesContainerMessage;
 import cz.vse.java.messages.utils.EErrorType;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.database.DBConnection;
-import cz.vse.java.utils.database.DatabaseConnectionContainer;
-import cz.vse.java.utils.database.EDBUse;
-import cz.vse.java.utils.userData.ERole;
+import cz.vse.java.util.database.DBConnection;
+import cz.vse.java.util.database.DatabaseConnectionContainer;
+import cz.vse.java.util.database.EDBUse;
+import cz.vse.java.util.userData.ERole;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,9 +1,9 @@
 package cz.vse.java.utils.persistance.service;
 
-import cz.vse.java.utils.database.DBConnection;
-import cz.vse.java.utils.database.DatabaseConnectionContainer;
-import cz.vse.java.utils.database.EDBUse;
-import org.junit.Before;
+import cz.vse.java.util.database.DBConnection;
+import cz.vse.java.util.database.DatabaseConnectionContainer;
+import cz.vse.java.util.database.EDBUse;
+import cz.vse.java.util.persistance.service.ProductService;
 import org.junit.Test;
 
 import java.sql.SQLException;

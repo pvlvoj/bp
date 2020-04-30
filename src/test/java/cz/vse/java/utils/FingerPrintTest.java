@@ -1,8 +1,7 @@
 package cz.vse.java.utils;
 
+import cz.vse.java.util.FingerPrint;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 public class FingerPrintTest {
 

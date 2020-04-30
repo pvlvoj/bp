@@ -8,7 +8,6 @@ import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.messages.AskForTaskCommand;
 import cz.vse.java.messages.utils.IMessage;
-import cz.vse.java.utils.userData.UserProperties;
 
 import java.util.logging.Logger;
 

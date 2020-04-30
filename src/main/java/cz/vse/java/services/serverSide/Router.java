@@ -3,7 +3,7 @@ package cz.vse.java.services.serverSide;
 
 import cz.vse.java.connections.utils.management.RouterClientsManagement;
 import cz.vse.java.connections.utils.management.ServicesManagement;
-import cz.vse.java.utils.observerDP.IObserver;
+import cz.vse.java.util.observerDP.IObserver;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;

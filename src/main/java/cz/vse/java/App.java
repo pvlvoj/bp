@@ -1,10 +1,6 @@
 package cz.vse.java;
 
-import cz.vse.java.services.serverSide.OrderManagement;
 import cz.vse.java.services.serverSide.Server;
-import cz.vse.java.utils.database.DBConnection;
-import cz.vse.java.utils.database.DatabaseConnectionContainer;
-import cz.vse.java.utils.database.EDBUse;
 
 import java.io.File;
 

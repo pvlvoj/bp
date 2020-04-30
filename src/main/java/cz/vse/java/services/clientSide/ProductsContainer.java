@@ -1,7 +1,7 @@
 package cz.vse.java.services.clientSide;
 
 
-import cz.vse.java.utils.persistance.entities.Product;
+import cz.vse.java.util.persistance.entities.Product;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -7,8 +7,6 @@ import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.messages.IPAddressContainer;
 import cz.vse.java.messages.utils.IMessage;
-import cz.vse.java.utils.ConnectionAutoCloser;
-import cz.vse.java.utils.database.DBConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

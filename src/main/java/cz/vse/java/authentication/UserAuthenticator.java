@@ -11,7 +11,7 @@ import cz.vse.java.messages.utils.EErrorType;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.utils.cryptography.hashing.EHashAlgorithm;
 import cz.vse.java.utils.cryptography.hashing.Hasher;
-import cz.vse.java.utils.database.DBConnection;
+import cz.vse.java.util.database.DBConnection;
 import cz.vse.java.utils.random.RandomNumberGenerator;
 
 import java.security.NoSuchAlgorithmException;

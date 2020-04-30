@@ -9,7 +9,7 @@ import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.messages.*;
 import cz.vse.java.messages.utils.EErrorType;
 import cz.vse.java.messages.utils.IMessage;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

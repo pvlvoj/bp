@@ -3,7 +3,7 @@ package cz.vse.java.authentication;
 
 import cz.vse.java.connections.serviceSide.S2CConnection;
 import cz.vse.java.connections.utils.IConnection;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;

@@ -17,7 +17,7 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.Router;
 import cz.vse.java.services.references.ServiceReference;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

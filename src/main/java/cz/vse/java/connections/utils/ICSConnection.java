@@ -2,7 +2,7 @@ package cz.vse.java.connections.utils;
 
 
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 /**************************************************************
  * <p>The interface of ICSConnection is used to contain all methods

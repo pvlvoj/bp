@@ -9,7 +9,7 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.messages.PasswordContainerMessage;
 import cz.vse.java.messages.PasswordRequest;
 import cz.vse.java.utils.cryptography.hashing.EHashAlgorithm;
-import cz.vse.java.utils.userData.UserProperties;
+import cz.vse.java.util.userData.UserProperties;
 
 import java.util.logging.Logger;
 

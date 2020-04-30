@@ -1,8 +1,8 @@
 package cz.vse.java.messages.utils.future;
 
 
-import cz.vse.java.utils.observerDP.IObserver;
-import cz.vse.java.utils.observerDP.ISubject;
+import cz.vse.java.util.observerDP.IObserver;
+import cz.vse.java.util.observerDP.ISubject;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;

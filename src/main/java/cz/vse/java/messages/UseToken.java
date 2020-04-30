@@ -4,7 +4,7 @@ package cz.vse.java.messages;
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.IDataContainer;
 import cz.vse.java.services.serverSide.EServiceType;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 import java.util.logging.Logger;
 

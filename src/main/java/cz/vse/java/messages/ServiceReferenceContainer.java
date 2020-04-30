@@ -1,11 +1,9 @@
 package cz.vse.java.messages;
 
 
-import cz.vse.java.connections.utils.management.ServicesManagement;
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.IDataContainer;
 import cz.vse.java.services.references.ServiceReference;
-import cz.vse.java.utils.Token;
 
 import java.util.logging.Logger;
 

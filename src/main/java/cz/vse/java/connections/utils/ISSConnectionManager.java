@@ -3,7 +3,7 @@ package cz.vse.java.connections.utils;
 
 import cz.vse.java.handlers.utils.IHandler;
 import cz.vse.java.services.references.ServiceReference;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.Token;
 
 /**************************************************************
  * <p>The interface of ISSConnectionManager is used to contain all methods

@@ -10,9 +10,9 @@ import cz.vse.java.services.serverSide.AService;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.references.EReferenceFor;
 import cz.vse.java.services.references.ServiceReference;
-import cz.vse.java.utils.FingerPrint;
-import cz.vse.java.utils.SSLServerConfigManager;
-import cz.vse.java.utils.Token;
+import cz.vse.java.util.FingerPrint;
+import cz.vse.java.util.SSLServerConfigManager;
+import cz.vse.java.util.Token;
 
 import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.SSLServerSocketFactory;

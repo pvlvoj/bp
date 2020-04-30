@@ -10,7 +10,7 @@ import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.clientSide.Client;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.IService;
-import cz.vse.java.utils.persistance.entities.orders.PreOrder;
+import cz.vse.java.util.persistance.entities.orders.PreOrder;
 
 import java.util.logging.Logger;
 

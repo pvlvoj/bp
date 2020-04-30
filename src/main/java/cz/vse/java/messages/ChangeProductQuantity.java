@@ -3,6 +3,7 @@ package cz.vse.java.messages;
 
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.IDataContainer;
+import cz.vse.java.util.persistance.entities.Product;
 
 import java.util.logging.Logger;
 
@@ -54,7 +55,7 @@ public class ChangeProductQuantity extends AMessage implements IDataContainer {
      * <p>Returns the content of the message.</p>
      *
      * <p>First cell of the array contains the id of the
-     * {@link cz.vse.java.utils.persistance.entities.Product} instance
+     * {@link Product} instance
      * persisted in DB. The value in index n. 1 is the change of the
      * quantity. Positives adds value, negatives subtracts.</p>
      *

@@ -3,7 +3,7 @@ package cz.vse.java.messages;
 
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.IDataContainer;
-import cz.vse.java.utils.persistance.entities.orders.Order;
+import cz.vse.java.util.persistance.entities.orders.Order;
 
 import java.util.logging.Logger;
 

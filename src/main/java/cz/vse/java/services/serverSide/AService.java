@@ -1,7 +1,7 @@
 package cz.vse.java.services.serverSide;
 
 
-import cz.vse.java.utils.observerDP.ISubject;
+import cz.vse.java.util.observerDP.ISubject;
 
 import java.util.logging.Logger;
 

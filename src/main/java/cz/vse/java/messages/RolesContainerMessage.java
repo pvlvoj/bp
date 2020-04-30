@@ -3,7 +3,7 @@ package cz.vse.java.messages;
 
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.IDataContainer;
-import cz.vse.java.utils.userData.ERole;
+import cz.vse.java.util.userData.ERole;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,8 +1,9 @@
 package cz.vse.java.utils.persistance.entities.orders;
 
-import cz.vse.java.utils.persistance.entities.EUnit;
-import cz.vse.java.utils.persistance.entities.OrderItem;
-import cz.vse.java.utils.persistance.entities.Product;
+import cz.vse.java.util.persistance.entities.EUnit;
+import cz.vse.java.util.persistance.entities.OrderItem;
+import cz.vse.java.util.persistance.entities.Product;
+import cz.vse.java.util.persistance.entities.orders.Order;
 import org.junit.Before;
 import org.junit.Test;
 
