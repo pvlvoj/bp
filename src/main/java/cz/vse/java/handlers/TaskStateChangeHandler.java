@@ -94,11 +94,14 @@ public class TaskStateChangeHandler extends AHandler {
                         if(t.getId().equals(id)) {
 
                             try {
-                                LOG.log(Level.SEVERE, "Updating the task state with ID like "
-                                        + id + " to the " + state.getDesc());
-                                new TaskService().update(t);
+
                                 t.setState(state);
-                                connection.send(new AddTaskMessage(t));
+
+                                LOG.log(Level.SEVERE, "Updating the task state with ID like "
+                                        + id + " to the " + state.getDesc() + ", task state is now: "
+                                        + t.getState().getDesc());
+
+                                new TaskService().update(t);
 
                             } catch (SQLException e) {
 

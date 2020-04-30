@@ -83,6 +83,8 @@ public class RefuseTaskHandler extends AHandler {
                 String username = (String) ((RefuseTask) message).getContent()[0];
                 Long id = (Long) ((RefuseTask) message).getContent()[1];
 
+                System.out.println("Task about to be refused: " + id);
+
                 List<Task> tasks = tm.getTasks(username);
 
                 Task toBeRemoved = null;
@@ -90,6 +92,8 @@ public class RefuseTaskHandler extends AHandler {
                 for (Task t : tasks) {
 
                     if(t.getId().equals(id)) {
+
+                        System.out.println(">>>>> Right task found and gonna be removed");
 
                         t.setUser(null);
                         t.setState(ETaskState.NOT_ASSIGNED);

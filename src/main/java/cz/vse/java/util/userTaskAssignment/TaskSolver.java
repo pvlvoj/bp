@@ -123,32 +123,48 @@ public class TaskSolver implements IObserver {
 
         if(listening) {
 
-            this.container.add(task);
-            User u = null;
+            boolean indicator = false;
 
-            try {
+            for (Task t : this.container.getTasks()) {
 
-                u = (User) new UserService().findByUserName(this.userName);
+                if (t.getId().equals(task.getId())) {
 
-            } catch (SQLException e) {
-                e.printStackTrace();
+                    indicator = true;
+                    break;
+                }
             }
 
-            if(u != null) {
+            if (!indicator) {
 
-                task.setUser(u);
-                task.setState(ETaskState.ASSIGNED);
+                this.container.add(task);
+
+                User u = null;
 
                 try {
 
-                    new TaskService().update(task);
+                    u = (User) new UserService().findByUserName(this.userName);
 
                 } catch (SQLException e) {
 
-                    LOG.log(Level.SEVERE, "Failed to work with DB! " + e.getMessage());
+                    e.printStackTrace();
                 }
 
-                this.connection.send(new AddTaskMessage(task));
+                if (u != null) {
+
+                    task.setUser(u);
+                    task.setState(ETaskState.ASSIGNED);
+
+                    try {
+
+                        new TaskService().update(task);
+
+                    } catch (SQLException e) {
+
+                        LOG.log(Level.SEVERE, "Failed to work with DB! " + e.getMessage());
+                    }
+
+                    //this.connection.send(new AddTaskMessage(task));
+                }
             }
         }
     }

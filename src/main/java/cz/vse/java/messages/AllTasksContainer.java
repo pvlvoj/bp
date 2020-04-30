@@ -50,7 +50,14 @@ public class AllTasksContainer extends AMessage implements IDataContainer {
             tasks = new ArrayList<>();
         }
 
+        System.out.println("SENDING TASKS: " + tasks.size());
+
         this.tasks = tasks;
+
+        for (Task t : tasks) {
+
+            System.out.println(t.getState());
+        }
     }
 
     /* *****************************************************************/

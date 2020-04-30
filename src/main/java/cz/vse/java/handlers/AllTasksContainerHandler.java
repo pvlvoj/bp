@@ -78,6 +78,7 @@ public class AllTasksContainerHandler extends AHandler {
 
                 for (Task t : tasks) {
 
+                    System.out.println("Adding task: " + t);
                     Client.getInstance().addTask(t);
                 }
 

@@ -164,8 +164,6 @@ public class TaskContainer implements ISubject {
 
             this.tasks.addIfAbsent(task);
 
-            System.out.println("Added task! is it contained: " + this.tasks.contains(task));
-
             notifyObservers();
         }
     }

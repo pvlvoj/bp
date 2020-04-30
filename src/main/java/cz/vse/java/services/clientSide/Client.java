@@ -74,6 +74,8 @@ public class Client extends AService implements Runnable, IObserver {
 
     private final ArrayList<ReceivedMessageContainer> receivedMessages;
 
+    private boolean listeningToTasks = false;
+
 
     /* *******************************************************/
     /* Static variables **************************************/
@@ -349,23 +351,36 @@ public class Client extends AService implements Runnable, IObserver {
      */
     public void addTask(Task task) {
 
-        System.out.println("Task state: " + task.getState().getDesc());
-        System.out.println("Number of tasks: " + this.tasks.getTasks().size());
-        this.tasks.remove(task.getId());
-        System.out.println("Number of tasks: " + this.tasks.getTasks().size());
-        this.tasks.add(task);
-        System.out.println("Number of tasks: " + this.tasks.getTasks().size());
+        if(listeningToTasks) {
 
-        if(task.getState().equals(ETaskState.ASSIGNED)) {
+            System.out.println("Task state: " + task.getState());
 
-            task.setState(ETaskState.CONFIRMED);
+            this.tasks.remove(task.getId());
+            this.tasks.add(task);
 
-            this.addMessageTask(new MessageTask(
-                    new TaskStateChange(task.getId(),
-                            ETaskState.CONFIRMED,
-                            UserProperties.getInstance().getUserName()),
-                    EServiceType.TASK_SERVICE
-            ));
+            if (task.getState().equals(ETaskState.ASSIGNED)) {
+
+                this.addMessageTask(new MessageTask(
+                        new TaskStateChange(task.getId(),
+                                ETaskState.CONFIRMED,
+                                UserProperties.getInstance().getUserName()),
+                        EServiceType.TASK_SERVICE
+                ));
+            }
+
+        } else {
+
+            if (task.getState().equals(ETaskState.ASSIGNED)) {
+
+                this.addMessageTask(new MessageTask(
+                                new RefuseTask(
+                                        UserProperties.getInstance().getUserName(),
+                                        task.getId()
+                                ),
+                                EServiceType.TASK_SERVICE
+                        )
+                );
+            }
         }
     }
 
@@ -649,6 +664,32 @@ public class Client extends AService implements Runnable, IObserver {
         this.preOrder = preOrder;
     }
 
+    /**
+     * Getter for {@link boolean} formed {@code listeningToTasks}
+     * of the instance of {@link Client}
+     *
+     * @return the value of {@code listeningToTasks}
+     * @see boolean
+     * @see Client
+     */
+    public boolean isListeningToTasks() {
+
+        return listeningToTasks;
+    }
+
+    /**
+     * <p>Setter for the {@code $field.typeName} formed
+     * {@code listeningToTasks} variable.</p>
+     *
+     * @param listeningToTasks given $field.typeName value to
+     *                         be set to the variable
+     * @see boolean
+     * @see Client
+     */
+    public void setListeningToTasks(boolean listeningToTasks) {
+
+        this.listeningToTasks = listeningToTasks;
+    }
 
     /* *******************************************************/
     /* Main method *******************************************/

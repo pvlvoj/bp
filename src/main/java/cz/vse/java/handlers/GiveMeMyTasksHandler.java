@@ -89,7 +89,11 @@ public class GiveMeMyTasksHandler extends AHandler {
 
                 try {
 
+                    //TODO
                     tasks.addAll(ts.getByUserNameAndState(username, ETaskState.ASSIGNED));
+
+                    System.out.println("Assigned: " + tasks.size());
+
                     tasks.addAll(ts.getByUserNameAndState(username, ETaskState.CONFIRMED));
 
                 } catch (SQLException e) {
@@ -97,26 +101,18 @@ public class GiveMeMyTasksHandler extends AHandler {
                     LOG.log(Level.SEVERE, "Unable to get data from this DB! " + e.getMessage());
                 }
 
-                List<Task> tasks2 = tm.getTasks(username);
+                if(tm.getTaskSolverContainer().getTaskSolver(username) != null) {
+
+                    tm.getTaskSolverContainer().getTaskSolver(username).clearTasks();
+                }
 
                 for (Task t : tasks) {
 
-                    Task toBeRemoved = null;
-
-                    for (Task t2 : tasks2) {
-
-                        if(t.getId().equals(t2.getId())) {
-
-                            toBeRemoved = t2;
-                        }
-                    }
-
-                    tasks2.remove(toBeRemoved);
+                    tm.getTaskSolverContainer().getTaskSolver(username).add(t);
                 }
 
-                tasks.addAll(tasks2);
-
-                connection.send(new AllTasksContainer(tasks));
+                connection.send(new AllTasksContainer(tm.getTaskSolverContainer()
+                        .getTaskSolver(username).getTasks(username)));
 
                 return true;
             }

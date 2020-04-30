@@ -307,8 +307,6 @@ public class S2CConnection implements ISSConnection, IProblemSolver, ISubject {
 
                 LOG.log(Level.FINE, "Sending message of " + message.getClass().getName());
 
-                System.out.println("Sending message of " + message.getClass().getName());
-
                 this.output.writeObject(message);
 
             } catch (IOException e) {
