@@ -200,6 +200,32 @@ public class Client extends AService implements Runnable, IObserver {
     public void run() {
 
         new Thread(router).start();
+
+        /* Initialization of secondary thread removing all received messages
+        * older than 30 seconds in past. It does it every 10 seconds. Saves
+        * memory resources and supports stability and performance. */
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while(true) {
+
+                    clearReceivedMessages(30L);
+
+                    try {
+
+                        Thread.sleep(10000);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        t.setDaemon(true);
+        t.start();
     }
 
 

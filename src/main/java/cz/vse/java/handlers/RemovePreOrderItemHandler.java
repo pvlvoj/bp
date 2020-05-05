@@ -5,31 +5,31 @@ import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.handlers.utils.AHandler;
 import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
-import cz.vse.java.messages.AllTasksContainer;
+import cz.vse.java.messages.RemovePreOrderItem;
 import cz.vse.java.messages.utils.IMessage;
-import cz.vse.java.services.clientSide.Client;
 import cz.vse.java.services.serverSide.EServiceType;
 import cz.vse.java.services.serverSide.IService;
-import cz.vse.java.util.persistance.entities.tasks.Task;
+import cz.vse.java.services.serverSide.OrderManagement;
+import cz.vse.java.util.persistance.entities.orders.PreOrder;
+import cz.vse.java.util.persistance.entities.orders.PreOrderItem;
 
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*********************************************************************
- * <p>The class of {@code AllTasksContainerHandler} is used to abstractly define
+ * <p>The class of {@code RemovePreOrderItemHandler} is used to abstractly define
  * the type of the instances.</p>
  *
  *
  * <i>Written for project "Connections2".</i>
  * @author Vojtěch Pavlů
- * @version 30. 04. 2020
+ * @version 05. 05. 2020
  *
  *
  * @see cz.vse.java.handlers
  */
-public class AllTasksContainerHandler extends AHandler {
+public class RemovePreOrderItemHandler extends AHandler {
 
 
     /* *****************************************************************/
@@ -42,7 +42,7 @@ public class AllTasksContainerHandler extends AHandler {
 
     /**
      * <p>Private static instance of the {@link Logger}
-     * - the logger of the {@link AllTasksContainerHandler class</p>
+     * - the logger of the {@link RemovePreOrderItemHandler class</p>
      */
     private static final Logger LOG =
             Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -50,7 +50,7 @@ public class AllTasksContainerHandler extends AHandler {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
-    public AllTasksContainerHandler(HandlerContainer container) {
+    public RemovePreOrderItemHandler(HandlerContainer container) {
 
         super(container);
     }
@@ -68,17 +68,23 @@ public class AllTasksContainerHandler extends AHandler {
     @Override
     public boolean handle(IConnection connection, IMessage message) {
 
-        if(message instanceof AllTasksContainer) {
+        if(message instanceof RemovePreOrderItem) {
 
             IService s = connection.getConnectionManager().getService();
 
-            if(s.getServiceType().equals(EServiceType.CLIENT)) {
+            if(s.getServiceType().equals(EServiceType.ORDER_MANAGEMENT)) {
 
-                List<Task> tasks = ((AllTasksContainer) message).getContent();
+                OrderManagement om = (OrderManagement) s;
 
-                for (Task t : tasks) {
+                String identificator = (String) ((RemovePreOrderItem) message).getContent()[1];
+                Long id = (Long) ((RemovePreOrderItem) message).getContent()[0];
 
-                    Client.getInstance().addTask(t);
+                PreOrderItem poi = om.getPreOrder(identificator).getPOI(id);
+
+                if(poi != null) {
+
+                    om.getPreOrder(identificator).getPreOrderItems().remove(poi);
+                    LOG.log(Level.INFO, "Removing PreOrderItem from PreOrder of " + identificator);
                 }
 
                 return true;
@@ -97,7 +103,7 @@ public class AllTasksContainerHandler extends AHandler {
     @Override
     public IHandler copy(HandlerContainer container) {
 
-        return new AllTasksContainerHandler(container);
+        return new RemovePreOrderItemHandler(container);
     }
 
     /* *****************************************************************/
@@ -114,29 +120,4 @@ public class AllTasksContainerHandler extends AHandler {
     /* Setters *********************************************************/
 
 
-
-    /* *****************************************************************/
-    /* Main method *****************************************************/
-
-
-    /**
-     * The main method of the class of AllTasksContainerHandler.
-     *
-     */
-  /*  public static void main(String[] args){
-        
-        System.err.println(">>> QuickTest: AllTasksContainerHandler class");
-        System.err.println(">>> Creating AllTasksContainerHandler instance...");
-        AllTasksContainerHandler instance = new AllTasksContainerHandler();
-        
-        System.out.println(instance.toString());
-        
-        
-        //code
-        
-        
-        System.err.println(">>> Creation successfull...");
-    }
-    
-    */
 }

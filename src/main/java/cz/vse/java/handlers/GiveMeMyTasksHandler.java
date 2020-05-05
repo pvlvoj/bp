@@ -92,8 +92,6 @@ public class GiveMeMyTasksHandler extends AHandler {
                     //TODO
                     tasks.addAll(ts.getByUserNameAndState(username, ETaskState.ASSIGNED));
 
-                    System.out.println("Assigned: " + tasks.size());
-
                     tasks.addAll(ts.getByUserNameAndState(username, ETaskState.CONFIRMED));
 
                 } catch (SQLException e) {
@@ -104,15 +102,14 @@ public class GiveMeMyTasksHandler extends AHandler {
                 if(tm.getTaskSolverContainer().getTaskSolver(username) != null) {
 
                     tm.getTaskSolverContainer().getTaskSolver(username).clearTasks();
+
+                    for (Task t : tasks) {
+
+                        tm.getTaskSolverContainer().getTaskSolver(username).add(t);
+                    }
+
+                    connection.send(new AllTasksContainer(tasks));
                 }
-
-                for (Task t : tasks) {
-
-                    tm.getTaskSolverContainer().getTaskSolver(username).add(t);
-                }
-
-                connection.send(new AllTasksContainer(tm.getTaskSolverContainer()
-                        .getTaskSolver(username).getTasks(username)));
 
                 return true;
             }

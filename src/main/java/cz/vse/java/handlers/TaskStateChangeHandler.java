@@ -89,11 +89,15 @@ public class TaskStateChangeHandler extends AHandler {
 
                     List<Task> tasks = tm.getTasks(username);
 
+                    Task changed = null;
+
                     for (Task t : tasks) {
 
                         if(t.getId().equals(id)) {
 
                             try {
+
+                                changed = t;
 
                                 t.setState(state);
 
@@ -111,6 +115,13 @@ public class TaskStateChangeHandler extends AHandler {
                             break;
                         }
                     }
+
+                    if(changed != null) {
+
+                        tm.getTaskSolverContainer().getTaskSolver(username).remove(changed.getId());
+                        tm.getTaskSolverContainer().getTaskSolver(username).add(changed);
+                    }
+
                     return true;
                 }
             }

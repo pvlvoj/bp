@@ -123,47 +123,40 @@ public class TaskSolver implements IObserver {
 
         if(listening) {
 
-            boolean indicator = false;
+            Long id = null;
 
-            for (Task t : this.container.getTasks()) {
+            this.remove(id);
 
-                if (t.getId().equals(task.getId())) {
+            this.container.add(task);
 
-                    indicator = true;
-                    break;
-                }
+            User u = null;
+
+            try {
+
+                u = (User) new UserService().findByUserName(this.userName);
+
+            } catch (SQLException e) {
+
+                e.printStackTrace();
             }
 
-            if (!indicator) {
+            if (task.getState().equals(ETaskState.NOT_ASSIGNED)) {
 
-                this.container.add(task);
+                System.out.println("Task was not assigned, now should be");
+                task.setState(ETaskState.ASSIGNED);
+            }
 
-                User u = null;
+            if (u != null) {
+
+                task.setUser(u);
 
                 try {
 
-                    u = (User) new UserService().findByUserName(this.userName);
+                    new TaskService().update(task);
 
                 } catch (SQLException e) {
 
-                    e.printStackTrace();
-                }
-
-                if (u != null) {
-
-                    task.setUser(u);
-                    task.setState(ETaskState.ASSIGNED);
-
-                    try {
-
-                        new TaskService().update(task);
-
-                    } catch (SQLException e) {
-
-                        LOG.log(Level.SEVERE, "Failed to work with DB! " + e.getMessage());
-                    }
-
-                    //this.connection.send(new AddTaskMessage(task));
+                    LOG.log(Level.SEVERE, "Failed to work with DB! " + e.getMessage());
                 }
             }
         }
@@ -201,6 +194,12 @@ public class TaskSolver implements IObserver {
 
             LOG.log(Level.SEVERE, "UNSUPPORTED CONNECTION TYPE!");
         }
+    }
+
+
+    public void remove(Long id) {
+
+        this.container.remove(id);
     }
 
 

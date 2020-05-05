@@ -3,39 +3,37 @@ package cz.vse.java.messages;
 
 import cz.vse.java.messages.utils.AMessage;
 import cz.vse.java.messages.utils.IDataContainer;
-import cz.vse.java.util.persistance.entities.tasks.Task;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 
 /*********************************************************************
- * <p>The class of {@code AllTasksContainer} is used to abstractly define
+ * <p>The class of {@code RemovePreOrderItem} is used to abstractly define
  * the type of the instances.</p>
  *
  *
  * <i>Written for project "Connections2".</i>
  * @author Vojtěch Pavlů
- * @version 30. 04. 2020
+ * @version 05. 05. 2020
  *
  *
  * @see cz.vse.java.messages
  */
-public class AllTasksContainer extends AMessage implements IDataContainer {
+public class RemovePreOrderItem extends AMessage implements IDataContainer {
 
 
     /* *****************************************************************/
     /* Instance variables **********************************************/
 
-    private List<Task> tasks;
+    private Long productID;
+    private String identificator;
 
     /* *****************************************************************/
     /* Static variables ************************************************/
 
     /**
      * <p>Private static instance of the {@link Logger}
-     * - the logger of the {@link AllTasksContainer class</p>
+     * - the logger of the {@link RemovePreOrderItem class</p>
      */
     private static final Logger LOG =
             Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -43,18 +41,10 @@ public class AllTasksContainer extends AMessage implements IDataContainer {
     /* *****************************************************************/
     /* Constructors ****************************************************/
 
-    public AllTasksContainer(List<Task> tasks) {
+    public RemovePreOrderItem(long productID, String identificator) {
 
-        if(tasks == null) {
-
-            tasks = new ArrayList<>();
-        }
-
-        System.out.println("SENDING TASKS: " + tasks.size());
-
-        this.tasks = tasks;
-
-        System.out.println("SENDING TASKS: " + this.getContent().size());
+        this.productID = productID;
+        this.identificator = identificator;
     }
 
     /* *****************************************************************/
@@ -73,14 +63,16 @@ public class AllTasksContainer extends AMessage implements IDataContainer {
     /**
      * <p>Returns the content of the message.</p>
      *
-     * @return the content the message contains.
+     * @return the content the message contains. In the first index, there is
+     * ID of the product to be removed from the cart, in the second is identificator
+     * of the {@link cz.vse.java.util.persistance.entities.orders.PreOrder}
      */
     @Override
-    public List<Task> getContent() {
+    public Object[] getContent() {
 
-        System.out.println("GET CONTENT - TASKS " + tasks.size());
-        return this.tasks;
+        return new Object[]{this.productID, this.identificator};
     }
+
 
     /* *****************************************************************/
     /* Setters *********************************************************/
