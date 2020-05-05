@@ -95,6 +95,7 @@ public class OrderManagement extends AGeneralService {
         this.clients.addMessageHandler(new SetContactToOrderMessageHandler(null));
         this.clients.addMessageHandler(new SetSubmitterToOrderHandler(null));
         this.clients.addMessageHandler(new TryToGenerateOrderHandler(null));
+        this.clients.addMessageHandler(new RemovePreOrderItemHandler(null));
 
         this.clients.addObserver(this);
     }

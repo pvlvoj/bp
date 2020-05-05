@@ -37,6 +37,8 @@ public class Product implements IEntity {
 
     private EUnit unit;
 
+    private String unitString;
+
     private List<EProductStamp> stamps;
 
     /* *****************************************************************/
@@ -55,6 +57,7 @@ public class Product implements IEntity {
     public Product() {
 
         this.stamps = new ArrayList<>();
+        this.unitString = "";
     }
 
     /* *****************************************************************/
@@ -243,6 +246,19 @@ public class Product implements IEntity {
         return location;
     }
 
+    /**
+     * Getter for {@link String} formed {@code unitString}
+     * of the instance of {@link Product}
+     *
+     * @return the value of {@code unitString}
+     * @see String
+     * @see Product
+     */
+    public String getUnitString() {
+
+        return unitString;
+    }
+
     /* *****************************************************************/
     /* Setters *********************************************************/
 
@@ -361,7 +377,13 @@ public class Product implements IEntity {
      * @see Product
      */
     public void setUnit(EUnit unit) {
+
         this.unit = unit;
+
+        if(unit != null) {
+
+            this.unitString = unit.getAbbr();
+        }
     }
 
     /**
@@ -376,6 +398,5 @@ public class Product implements IEntity {
     public void setStamps(List<EProductStamp> stamps) {
         this.stamps = stamps;
     }
-
 
 }

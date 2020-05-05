@@ -5,6 +5,7 @@ import cz.vse.java.connections.utils.IConnection;
 import cz.vse.java.handlers.utils.AHandler;
 import cz.vse.java.handlers.utils.HandlerContainer;
 import cz.vse.java.handlers.utils.IHandler;
+import cz.vse.java.messages.PreOrderContainerMessage;
 import cz.vse.java.messages.RemovePreOrderItem;
 import cz.vse.java.messages.utils.IMessage;
 import cz.vse.java.services.serverSide.EServiceType;
@@ -13,6 +14,7 @@ import cz.vse.java.services.serverSide.OrderManagement;
 import cz.vse.java.util.persistance.entities.orders.PreOrder;
 import cz.vse.java.util.persistance.entities.orders.PreOrderItem;
 
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,12 +81,29 @@ public class RemovePreOrderItemHandler extends AHandler {
                 String identificator = (String) ((RemovePreOrderItem) message).getContent()[1];
                 Long id = (Long) ((RemovePreOrderItem) message).getContent()[0];
 
-                PreOrderItem poi = om.getPreOrder(identificator).getPOI(id);
+                PreOrder po = om.getPreOrder(identificator);
 
-                if(poi != null) {
+                if(po != null) {
 
-                    om.getPreOrder(identificator).getPreOrderItems().remove(poi);
-                    LOG.log(Level.INFO, "Removing PreOrderItem from PreOrder of " + identificator);
+                    PreOrderItem poi = om.getPreOrder(identificator).getPOI(id);
+
+                    if (poi != null) {
+
+                        LOG.log(Level.INFO, "Removing PreOrderItem from PreOrder of " + identificator);
+
+                        try {
+
+                            po.reset(poi);
+
+                        } catch (SQLException e) {
+
+                            LOG.log(Level.SEVERE, "Connection with DB failed! " + e.getMessage());
+
+                        } finally {
+
+                            connection.send(new PreOrderContainerMessage(po));
+                        }
+                    }
                 }
 
                 return true;

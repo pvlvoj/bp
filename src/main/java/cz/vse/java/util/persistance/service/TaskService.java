@@ -410,6 +410,34 @@ public class TaskService extends AEntityService implements IPersistor {
     }
 
 
+    public List<Task> getByState(ETaskState state) throws SQLException {
+
+        Connection conn = this.getConnection().getConnection();
+
+        conn.setAutoCommit(false);
+
+        String query = "SELECT TASK.ID FROM TASK " +
+                "WHERE TASK.TASK_STATE_ID = ?";
+
+        PreparedStatement ps = conn.prepareStatement(query);
+
+        ps.setLong(1, state.getId());
+
+        ResultSet rs = ps.executeQuery();
+
+        List<Task> tasks = new ArrayList<>();
+
+        while (rs.next()) {
+
+            tasks.add((Task) this.get(rs.getLong(1)));
+        }
+
+        conn.commit();
+
+        return tasks;
+    }
+
+
     public List<Task> getByUserNameAndState(String username, ETaskState state) throws SQLException {
 
         Connection conn = this.getConnection().getConnection();

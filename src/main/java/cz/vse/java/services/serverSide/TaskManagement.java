@@ -9,6 +9,8 @@ import cz.vse.java.util.database.DBConnection;
 import cz.vse.java.util.database.DatabaseConnectionContainer;
 import cz.vse.java.util.database.EDBUse;
 import cz.vse.java.util.observerDP.IObserver;
+import cz.vse.java.util.persistance.entities.IEntity;
+import cz.vse.java.util.persistance.entities.User;
 import cz.vse.java.util.persistance.entities.tasks.ETaskState;
 import cz.vse.java.util.persistance.entities.tasks.Task;
 import cz.vse.java.util.persistance.service.TaskService;
@@ -178,12 +180,22 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
                     try {
 
                         updateTasks();
+
+                        checkTasks(new TaskService().getByState(ETaskState.CONFIRMED));
+                        checkTasks(new TaskService().getByState(ETaskState.DONE));
+                        checkTasks(new TaskService().getByState(ETaskState.NOT_DONE));
+                        checkTasks(new TaskService().getByState(ETaskState.ASSIGNED));
+
                         Thread.sleep(5000);
 
                     } catch (SQLException e) {
+
                         e.printStackTrace();
+
                     } catch (InterruptedException e) {
+
                         e.printStackTrace();
+
                     }
                 }
             }
@@ -213,7 +225,28 @@ public class TaskManagement extends AGeneralService implements IService, IObserv
     }
 
 
+    public void checkTasks(List<Task> tasks) {
 
+        for (Task task : tasks) {
+
+            User u = task.getUser();
+
+            if(u != null) {
+
+                String username = u.getUserName();
+
+                List<Task> userTasks = this.getTasks(username);
+
+                if(userTasks != null) {
+
+                    for (Task task2 : userTasks) {
+
+                        task2.setState(task.getState());
+                    }
+                }
+            }
+        }
+    }
 
 
     /* *****************************************************************/

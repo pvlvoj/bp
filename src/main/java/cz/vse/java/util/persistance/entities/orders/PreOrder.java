@@ -94,6 +94,32 @@ public class PreOrder implements Serializable {
 
 
     /**
+     * <p>Resets one specific {@link PreOrderItem} from this container.</p>
+     *
+     * @param poi           to be removed
+     * @throws SQLException when there is a problem while connecting to DB
+     */
+    public void reset(PreOrderItem poi) throws SQLException {
+
+        if(poi != null) {
+
+            ProductService ps = new ProductService();
+
+            Product orig = (Product) ps.get(poi.getProduct().getId());
+
+            if(orig != null) {
+
+                int origQ = orig.getQuantity();
+
+                orig.setQuantity(origQ + poi.getQuantity());
+
+                ps.update(orig);
+            }
+        }
+    }
+
+
+    /**
      * <p>Resets the {@link PreOrder} and tries to add all these
      * reserver products back to DB.</p>
      *
@@ -101,22 +127,11 @@ public class PreOrder implements Serializable {
      */
     public void reset() throws SQLException {
 
-        ProductService ps = new ProductService();
-
         synchronized (this.getPreOrderItems()) {
 
             for (PreOrderItem poi : this.getPreOrderItems()) {
 
-                Product orig = (Product) ps.get(poi.getProduct().getId());
-
-                if(orig != null) {
-
-                    int origQ = orig.getQuantity();
-
-                    orig.setQuantity(origQ + poi.getQuantity());
-
-                    ps.update(orig);
-                }
+                this.reset(poi);
             }
 
             this.getPreOrderItems().clear();
